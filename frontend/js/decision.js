@@ -616,7 +616,7 @@ async function runAnalysis() {
 
         const response =
             await fetch(
-                "http://localhost:5000/api/dss/run",
+                "https://engineer-ai-dss.vercel.app/api/dss/run",
                 {
 
                     method: "POST",

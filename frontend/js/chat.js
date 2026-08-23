@@ -143,7 +143,7 @@ async function sendMessage(message) {
   showTyping();
 
   try {
-    const response = await fetch("http://localhost:5000/api/chat", {
+    const response = await fetch("https://engineer-ai-dss.vercel.app/api/chat", {
       method: "POST",
 
       headers: {

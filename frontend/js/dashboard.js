@@ -84,7 +84,7 @@ async function runDSS() {
 
     runDSSBtn.disabled = true;
 
-    const response = await fetch("http://localhost:5000/api/dss/run", {
+    const response = await fetch("https://engineer-ai-dss.vercel.app", {
       method: "POST",
 
       headers: {
