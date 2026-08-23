@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>EngineerAI DSS</title>
+
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+
+  <body>
+    <header class="navbar">
+      <div class="logo">Engineer<span>AI</span></div>
+
+      <nav>
+        <a href="index.html" class="active">Chat</a>
+        <a href="decision.html">Decision Analysis</a>
+        <a href="dashboard.html">Dashboard</a>
+      </nav>
+    </header>
+
+    <main class="chat-page">
+      <section class="chat-container">
+        <!-- HEADER -->
+
+        <div class="chat-header">
+          <div class="ai-status">
+            <div class="ai-icon">AI</div>
+
+            <div>
+              <h1>Engineering Decision Assistant</h1>
+
+              <div class="online-status">
+                <span></span>
+                AI Assistant Online
+              </div>
+            </div>
+          </div>
+
+          <button id="clearChatBtn" class="clear-chat-btn" type="button">
+            Clear Chat
+          </button>
+        </div>
+
+        <!-- INTRO -->
+
+        <div class="chat-intro">
+          <h2>How can I help you?</h2>
+
+          <p>
+            Ask questions about your engineering decision analysis, AHP weights,
+            TOPSIS rankings, alternatives and recommendations.
+          </p>
+        </div>
+
+        <!-- QUICK QUESTIONS -->
+
+        <div class="quick-actions">
+          <button
+            type="button"
+            class="quick-question"
+            data-question="Which alternative was recommended?"
+          >
+            Recommended option
+          </button>
+
+          <button
+            type="button"
+            class="quick-question"
+            data-question="What are the AHP weights and what do they mean?"
+          >
+            AHP weights
+          </button>
+
+          <button
+            type="button"
+            class="quick-question"
+            data-question="Explain the TOPSIS ranking."
+          >
+            TOPSIS ranking
+          </button>
+
+          <button
+            type="button"
+            class="quick-question"
+            data-question="Why was the recommended alternative ranked first?"
+          >
+            Why this recommendation?
+          </button>
+        </div>
+
+        <!-- CHAT -->
+
+        <div id="chatMessages" class="chat-messages">
+          <div class="message bot">
+            <div class="avatar">AI</div>
+
+            <div class="message-content">
+              <div class="bubble">
+                Hello! I'm your Engineering Decision Support Assistant.
+
+                <br /><br />
+
+                I can help you understand your AHP and TOPSIS decision analysis.
+
+                <br /><br />
+
+                Run a decision analysis first, then ask me about the results.
+              </div>
+
+              <span class="message-time"> AI Assistant </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TYPING -->
+
+        <div id="typingIndicator" class="typing-indicator hidden">
+          <div class="avatar">AI</div>
+
+          <div class="typing-bubble">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <!-- INPUT -->
+
+        <form id="chatForm" class="chat-input">
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Ask about your decision analysis..."
+            autocomplete="off"
+          />
+
+          <button type="submit" id="sendButton">Send</button>
+        </form>
+
+        <div class="chat-disclaimer">
+          AI decision support only. Verify important engineering, regulatory and
+          financial decisions with qualified professionals.
+        </div>
+      </section>
+    </main>
+
+    <script src="./js/chat.js"></script>
+  </body>
+</html>

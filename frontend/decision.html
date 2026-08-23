@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Decision Input | Engineering DSS</title>
+
+    <link rel="stylesheet" href="./css/decision.css" />
+  </head>
+
+  <body>
+    <main class="decision-page">
+      <!-- HEADER -->
+
+      <section class="page-header">
+        <div>
+          <p class="eyebrow">ENGINEERING DSS</p>
+
+          <h1>Decision Input</h1>
+
+          <p class="description">
+            Evaluate the feasibility of establishing a chemical engineering
+            service firm in Nigeria's oil and gas sector.
+          </p>
+        </div>
+      </section>
+
+      <!-- INSTRUCTIONS -->
+
+      <section class="info-card">
+        <h2>How to evaluate the alternatives</h2>
+
+        <p>
+          Enter a performance score from <strong>1 to 10</strong>
+          for each alternative under every criterion.
+        </p>
+
+        <div class="scale">
+          <span> 1 = Very Poor </span>
+
+          <span> 5 = Average </span>
+
+          <span> 10 = Excellent </span>
+        </div>
+      </section>
+
+      <!-- ALTERNATIVES -->
+
+      <section class="alternatives-card">
+        <h2>Establishment Alternatives</h2>
+
+        <div class="alternative-grid">
+          <div class="alternative">
+            <span class="number">01</span>
+
+            <div>
+              <h3>Process Optimization-Focused Firm</h3>
+
+              <p>Process optimization and engineering support services.</p>
+            </div>
+          </div>
+
+          <div class="alternative">
+            <span class="number">02</span>
+
+            <div>
+              <h3>Environmental Compliance-Focused Firm</h3>
+
+              <p>Environmental management and compliance services.</p>
+            </div>
+          </div>
+
+          <div class="alternative">
+            <span class="number">03</span>
+
+            <div>
+              <h3>Laboratory Testing-Focused Firm</h3>
+
+              <p>Laboratory and analytical testing services.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DECISION MATRIX -->
+
+      <section class="matrix-card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">TOPSIS INPUT</p>
+
+            <h2>Performance Evaluation</h2>
+          </div>
+
+          <span class="criteria-count"> 18 Criteria </span>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="decisionTable">
+            <thead>
+              <tr>
+                <th>Criterion</th>
+
+                <th>Type</th>
+
+                <th>Process Optimization</th>
+
+                <th>Environmental Compliance</th>
+
+                <th>Laboratory Testing</th>
+              </tr>
+            </thead>
+
+            <tbody id="criteriaTableBody">
+              <!-- JavaScript generates criteria -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RUN ANALYSIS -->
+
+      <section class="run-card">
+        <div>
+          <h2>Ready to run the analysis?</h2>
+
+          <p id="statusMessage">
+            Make sure all 18 criteria have been evaluated.
+          </p>
+        </div>
+
+        <button id="runAnalysisBtn">Run DSS Analysis</button>
+
+        <button type="button" id="resetAnalysisBtn" class="reset-btn">
+          Reset Scores
+        </button>
+      </section>
+    </main>
+
+    <script src="./js/decision.js"></script>
+  </body>
+</html>
