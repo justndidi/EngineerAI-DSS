@@ -23,7 +23,7 @@ const clearChatBtn = document.getElementById("clearChatBtn");
 // ========================================
 
 // Your Express backend is running on port 5000.
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = "https://engineerai-dss-production.up.railway.app";
 
 // ========================================
 // GET DSS RESULT
