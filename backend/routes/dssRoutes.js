@@ -1,11 +1,20 @@
 const express = require("express");
 
-const { runDSS, getLatestDSSResult } = require("../controllers/dssController");
-
 const router = express.Router();
 
-router.post("/run", runDSS);
+const {
+    runDSS
+} = require("../controllers/dssController");
 
-router.get("/latest", getLatestDSSResult);
+
+// ========================================
+// RUN EXCEL DSS
+// ========================================
+
+router.post(
+    "/run",
+    runDSS
+);
+
 
 module.exports = router;

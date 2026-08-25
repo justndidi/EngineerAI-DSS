@@ -1,9 +1,42 @@
 const express = require("express");
 
-const router = express.Router();
+const router =
+    express.Router();
 
-const { chat } = require("../controllers/chatController");
+const {
+    chat
+} = require("../controllers/chatController");
 
-router.post("/", chat);
+
+// ========================================
+// CHAT
+// ========================================
+
+router.post(
+    "/",
+    chat
+);
+
+
+// ========================================
+// TEST ROUTE
+// ========================================
+
+router.get(
+    "/",
+    (req, res) => {
+
+        res.json({
+
+            success: true,
+
+            message:
+                "Chat API is working."
+
+        });
+
+    }
+);
+
 
 module.exports = router;

@@ -1,143 +1,319 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Decision Input | Engineering DSS</title>
+<head>
 
-    <link rel="stylesheet" href="./css/decision.css" />
-  </head>
+    <meta charset="UTF-8">
 
-  <body>
-    <main class="decision-page">
-      <!-- HEADER -->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-      <section class="page-header">
-        <div>
-          <p class="eyebrow">ENGINEERING DSS</p>
+    <title>EngineerAI - Decision Analysis</title>
 
-          <h1>Decision Input</h1>
+    <link
+        rel="stylesheet"
+        href="./css/decision.css"
+    >
 
-          <p class="description">
-            Evaluate the feasibility of establishing a chemical engineering
-            service firm in Nigeria's oil and gas sector.
-          </p>
+</head>
+
+
+<body>
+
+    <!-- ========================================
+         NAVBAR
+    ========================================= -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            Engineer<span>AI</span>
         </div>
-      </section>
 
-      <!-- INSTRUCTIONS -->
 
-      <section class="info-card">
-        <h2>How to evaluate the alternatives</h2>
+        <nav>
 
-        <p>
-          Enter a performance score from <strong>1 to 10</strong>
-          for each alternative under every criterion.
+            <a href="index.html">
+                Chat
+            </a>
+
+            <a
+                href="decision.html"
+                class="active"
+            >
+                Decision Analysis
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- ========================================
+         MAIN
+    ========================================= -->
+
+    <main class="decision-page">
+
+
+        <!-- ========================================
+             HEADER
+        ========================================= -->
+
+        <section class="page-header">
+
+            <h1>
+                Engineering Decision Analysis
+            </h1>
+
+            <p>
+                Enter your alternatives and evaluate
+                them using the established AHP-TOPSIS
+                decision model.
+            </p>
+
+        </section>
+
+
+
+        <!-- ========================================
+             ALTERNATIVES
+        ========================================= -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    Decision Alternatives
+                </h2>
+
+                <p>
+                    Enter the three alternatives you
+                    want to compare.
+                </p>
+
+            </div>
+
+
+            <div class="alternatives-grid">
+
+
+                <div class="alternative-field">
+
+                    <label for="alternative0">
+                        Alternative 1
+                    </label>
+
+                    <input
+                        type="text"
+                        id="alternative0"
+                        class="alternative-input"
+                        placeholder="e.g. Solar Power Plant"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+
+                <div class="alternative-field">
+
+                    <label for="alternative1">
+                        Alternative 2
+                    </label>
+
+                    <input
+                        type="text"
+                        id="alternative1"
+                        class="alternative-input"
+                        placeholder="e.g. Gas Power Plant"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+
+                <div class="alternative-field">
+
+                    <label for="alternative2">
+                        Alternative 3
+                    </label>
+
+                    <input
+                        type="text"
+                        id="alternative2"
+                        class="alternative-input"
+                        placeholder="e.g. Hydroelectric Plant"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             MODEL INFORMATION
+        ========================================= -->
+
+        <section class="info-box">
+
+            <strong>
+                About the AHP-TOPSIS model
+            </strong>
+
+            <p>
+                The established AHP criterion weights
+                are stored in the Excel decision model.
+                You do not need to enter the expert
+                AHP questionnaire again for each
+                decision.
+            </p>
+
+        </section>
+
+
+
+        <!-- ========================================
+             SCORE CARD
+        ========================================= -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    Decision Scores
+                </h2>
+
+                <p>
+                    Rate each alternative from 1 to 10
+                    for every criterion.
+                </p>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table class="criteria-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Criterion
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th id="alternativeHeader0">
+                                Alternative 1
+                            </th>
+
+                            <th id="alternativeHeader1">
+                                Alternative 2
+                            </th>
+
+                            <th id="alternativeHeader2">
+                                Alternative 3
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="criteriaTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ========================================
+             ACTIONS
+        ========================================= -->
+
+        <section class="actions">
+
+            <button
+                type="button"
+                id="resetAnalysisBtn"
+                class="secondary-btn"
+            >
+                Reset Scores
+            </button>
+
+
+            <button
+                type="button"
+                id="runAnalysisBtn"
+                class="primary-btn"
+            >
+                Run Decision Analysis
+            </button>
+
+        </section>
+
+
+        <!-- ========================================
+             STATUS
+        ========================================= -->
+
+        <div
+            id="statusMessage"
+            class="status-message"
+        ></div>
+
+
+        <!-- ========================================
+             DISCLAIMER
+        ========================================= -->
+
+        <p class="disclaimer">
+
+            Decision-support analysis only.
+            Important engineering, financial and
+            regulatory decisions should be validated
+            by qualified professionals.
+
         </p>
 
-        <div class="scale">
-          <span> 1 = Very Poor </span>
-
-          <span> 5 = Average </span>
-
-          <span> 10 = Excellent </span>
-        </div>
-      </section>
-
-      <!-- ALTERNATIVES -->
-
-      <section class="alternatives-card">
-        <h2>Establishment Alternatives</h2>
-
-        <div class="alternative-grid">
-          <div class="alternative">
-            <span class="number">01</span>
-
-            <div>
-              <h3>Process Optimization-Focused Firm</h3>
-
-              <p>Process optimization and engineering support services.</p>
-            </div>
-          </div>
-
-          <div class="alternative">
-            <span class="number">02</span>
-
-            <div>
-              <h3>Environmental Compliance-Focused Firm</h3>
-
-              <p>Environmental management and compliance services.</p>
-            </div>
-          </div>
-
-          <div class="alternative">
-            <span class="number">03</span>
-
-            <div>
-              <h3>Laboratory Testing-Focused Firm</h3>
-
-              <p>Laboratory and analytical testing services.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- DECISION MATRIX -->
-
-      <section class="matrix-card">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">TOPSIS INPUT</p>
-
-            <h2>Performance Evaluation</h2>
-          </div>
-
-          <span class="criteria-count"> 18 Criteria </span>
-        </div>
-
-        <div class="table-wrapper">
-          <table id="decisionTable">
-            <thead>
-              <tr>
-                <th>Criterion</th>
-
-                <th>Type</th>
-
-                <th>Process Optimization</th>
-
-                <th>Environmental Compliance</th>
-
-                <th>Laboratory Testing</th>
-              </tr>
-            </thead>
-
-            <tbody id="criteriaTableBody">
-              <!-- JavaScript generates criteria -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- RUN ANALYSIS -->
-
-      <section class="run-card">
-        <div>
-          <h2>Ready to run the analysis?</h2>
-
-          <p id="statusMessage">
-            Make sure all 18 criteria have been evaluated.
-          </p>
-        </div>
-
-        <button id="runAnalysisBtn">Run DSS Analysis</button>
-
-        <button type="button" id="resetAnalysisBtn" class="reset-btn">
-          Reset Scores
-        </button>
-      </section>
     </main>
 
+
+
+    <!-- ========================================
+         JAVASCRIPT
+    ========================================= -->
+
     <script src="./js/decision.js"></script>
-  </body>
+
+</body>
+
 </html>

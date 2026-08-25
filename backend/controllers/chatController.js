@@ -1,4 +1,8 @@
 
+// ========================================
+// ENGINEERING AI CHAT CONTROLLER
+// ========================================
+
 const { askAI } = require("../services/aiService");
 
 const {
@@ -7,19 +11,16 @@ const {
 
 
 // ========================================
-// ENGINEERING AI CHAT
+// CHAT
 // ========================================
 
 async function chat(req, res) {
 
     try {
 
-        // ========================================
-        // GET USER MESSAGE
-        // ========================================
-
         const {
-            message
+            message,
+            dssResult
         } = req.body;
 
 
@@ -46,28 +47,46 @@ async function chat(req, res) {
 
 
         // ========================================
-        // GET LATEST DSS RESULT
+        // GET DSS RESULT
+        //
+        // Priority:
+        // 1. Result supplied by frontend
+        // 2. Backend stored result
         // ========================================
 
-        const dssResult =
-            getLatestDSSResult();
+        const currentDSSResult =
+            dssResult || getLatestDSSResult();
 
 
         // ========================================
-        // BUILD AI CONTEXT
+        // CHECK DSS RESULT
+        // ========================================
+
+        if (!currentDSSResult) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                error:
+                    "Please run a DSS analysis before asking questions about the results."
+
+            });
+
+        }
+
+
+        // ========================================
+        // SEND EXCEL RESULT TO AI
         // ========================================
 
         const context = {
 
             dss:
-                dssResult || null
+                currentDSSResult
 
         };
 
-
-        // ========================================
-        // SEND QUESTION TO AI
-        // ========================================
 
         const reply =
             await askAI(
@@ -77,20 +96,19 @@ async function chat(req, res) {
 
 
         // ========================================
-        // SEND RESPONSE
+        // RESPONSE
         // ========================================
 
-        res.json({
+        return res.json({
 
             success: true,
 
             reply,
 
             dss:
-                dssResult || null
+                currentDSSResult
 
         });
-
 
     } catch (error) {
 
@@ -100,7 +118,7 @@ async function chat(req, res) {
         );
 
 
-        res.status(500).json({
+        return res.status(500).json({
 
             success: false,
 
@@ -123,4 +141,3 @@ module.exports = {
     chat
 
 };
-

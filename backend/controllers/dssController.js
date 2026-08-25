@@ -1,49 +1,30 @@
-// ========================================
-// DSS CONTROLLER
-// ========================================
-
 const {
-    calculateDSS
-} = require("../services/dssService");
-
-
-const {
-    ahpMatrix
-} = require("../dssData");
-
-
-const {
-    setLatestDSSResult,
-
-    getLatestDSSResult
-} = require("../services/dssStateService");
+    runExcelDSS
+} = require("../services/excelService");
 
 
 // ========================================
 // RUN DSS
 // ========================================
 
-function runDSS(req, res) {
+async function runDSS(req, res) {
 
     try {
 
         const {
-
             decisionMatrix,
-
-            alternatives,
-
-            criteriaTypes
-
+            alternatives
         } = req.body;
 
 
         // ========================================
-        // VALIDATE REQUEST
+        // VALIDATION
         // ========================================
 
         if (
-            !Array.isArray(decisionMatrix)
+            !Array.isArray(
+                decisionMatrix
+            )
         ) {
 
             return res.status(400).json({
@@ -59,7 +40,9 @@ function runDSS(req, res) {
 
 
         if (
-            !Array.isArray(alternatives)
+            !Array.isArray(
+                alternatives
+            )
         ) {
 
             return res.status(400).json({
@@ -74,56 +57,30 @@ function runDSS(req, res) {
         }
 
 
-        if (
-            !Array.isArray(criteriaTypes)
-        ) {
-
-            return res.status(400).json({
-
-                success: false,
-
-                message:
-                    "Criteria types are required."
-
-            });
-
-        }
-
-
         // ========================================
-        // CALCULATE
+        // SEND TO EXCEL
         // ========================================
 
         const result =
-            calculateDSS({
-
-                ahpMatrix,
+            await runExcelDSS({
 
                 decisionMatrix,
 
-                alternatives,
-
-                criteriaTypes
+                alternatives
 
             });
 
 
         // ========================================
-        // SAVE
+        // RETURN RESULT
         // ========================================
 
-        setLatestDSSResult(
-            result
-        );
-
-
-        // ========================================
-        // RESPONSE
-        // ========================================
-
-        return res.json({
+        return res.status(200).json({
 
             success: true,
+
+            message:
+                "Excel DSS analysis completed successfully.",
 
             result
 
@@ -133,17 +90,18 @@ function runDSS(req, res) {
     } catch (error) {
 
         console.error(
-            "DSS Error:",
+            "DSS Controller Error:",
             error
         );
 
 
-        return res.status(400).json({
+        return res.status(500).json({
 
             success: false,
 
             message:
-                error.message
+                error.message ||
+                "Failed to run DSS analysis."
 
         });
 
@@ -151,54 +109,9 @@ function runDSS(req, res) {
 
 }
 
-
-// ========================================
-// GET LATEST DSS RESULT
-// ========================================
-
-function getLatestDSSResultRoute(
-    req,
-    res
-) {
-
-    const result =
-        getLatestDSSResult();
-
-
-    if (!result) {
-
-        return res.status(404).json({
-
-            success: false,
-
-            message:
-                "No DSS analysis has been performed yet."
-
-        });
-
-    }
-
-
-    return res.json({
-
-        success: true,
-
-        result
-
-    });
-
-}
-
-
-// ========================================
-// EXPORT
-// ========================================
 
 module.exports = {
 
-    runDSS,
-
-    getLatestDSSResult:
-        getLatestDSSResultRoute
+    runDSS
 
 };
