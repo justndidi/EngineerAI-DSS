@@ -65,3 +65,46 @@ EngineeringAI-DSS/
     ├── dashboard.html
     ├── decision.html
     └── index.html
+
+How It Works
+
+The system evaluates decision alternatives using multiple criteria.
+
+1. Criteria Evaluation
+
+The decision problem is defined using relevant criteria for evaluating engineering alternatives.
+
+2. AHP
+
+The Analytic Hierarchy Process is used to calculate the relative weights of the decision criteria.
+
+3. TOPSIS
+
+The calculated criteria weights are used with TOPSIS to determine how closely each alternative matches the ideal solution.
+
+4. Ranking
+
+The alternatives are ranked based on their calculated closeness coefficients.
+
+5. Results
+
+The frontend presents the decision-analysis results to the user through the dashboard and decision interface.
+
+Purpose
+
+The project demonstrates how software development and Multi-Criteria Decision-Making techniques can be combined to support structured engineering decisions.
+
+Project Status
+
+This project was developed as a practical engineering software project and is being further improved as development skills and functionality evolve.
+
+Author
+
+Jegbefume Joy Ndidi
+
+Computer Science Student
+Federal University of Petroleum Resources, Effurun
+
+GitHub: https://github.com/justndidi
+
+LinkedIn: https://www.linkedin.com/in/joy-jegbefume-96ba89391
