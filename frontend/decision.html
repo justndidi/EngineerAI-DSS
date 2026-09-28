@@ -19,7 +19,6 @@
 
 </head>
 
-
 <body>
 
     <!-- ========================================
@@ -31,7 +30,6 @@
         <div class="logo">
             Engineer<span>AI</span>
         </div>
-
 
         <nav>
 
@@ -55,16 +53,14 @@
     </header>
 
 
-
     <!-- ========================================
          MAIN
     ========================================= -->
 
     <main class="decision-page">
 
-
         <!-- ========================================
-             HEADER
+             PAGE HEADER
         ========================================= -->
 
         <section class="page-header">
@@ -80,7 +76,6 @@
             </p>
 
         </section>
-
 
 
         <!-- ========================================
@@ -105,7 +100,6 @@
 
             <div class="alternatives-grid">
 
-
                 <div class="alternative-field">
 
                     <label for="alternative0">
@@ -116,12 +110,11 @@
                         type="text"
                         id="alternative0"
                         class="alternative-input"
-                        placeholder="e.g. Solar Power Plant"
+                        placeholder="e.g. Process Optimization Firm"
                         autocomplete="off"
                     >
 
                 </div>
-
 
 
                 <div class="alternative-field">
@@ -134,12 +127,11 @@
                         type="text"
                         id="alternative1"
                         class="alternative-input"
-                        placeholder="e.g. Gas Power Plant"
+                        placeholder="e.g. Environmental Compliance Firm"
                         autocomplete="off"
                     >
 
                 </div>
-
 
 
                 <div class="alternative-field">
@@ -152,7 +144,7 @@
                         type="text"
                         id="alternative2"
                         class="alternative-input"
-                        placeholder="e.g. Hydroelectric Plant"
+                        placeholder="e.g. Laboratory Testing Firm"
                         autocomplete="off"
                     >
 
@@ -161,7 +153,6 @@
             </div>
 
         </section>
-
 
 
         <!-- ========================================
@@ -182,12 +173,24 @@
                 decision.
             </p>
 
+            <p>
+                The model contains 19 TOPSIS criteria:
+                5 Technical, 3 Operational,
+                4 Environmental &amp; Safety,
+                4 Financial and 3 Regulatory.
+            </p>
+
+            <p>
+                Non-financial criteria are rated from
+                1 to 10. Financial criteria are entered
+                as actual Nigerian Naira amounts.
+            </p>
+
         </section>
 
 
-
         <!-- ========================================
-             SCORE CARD
+             DECISION SCORES
         ========================================= -->
 
         <section class="card">
@@ -199,8 +202,10 @@
                 </h2>
 
                 <p>
-                    Rate each alternative from 1 to 10
-                    for every criterion.
+                    Rate non-financial criteria from
+                    1 to 10. Enter actual financial
+                    amounts in Nigerian Naira (₦) for
+                    the four financial cost criteria.
                 </p>
 
             </div>
@@ -254,7 +259,6 @@
         </section>
 
 
-
         <!-- ========================================
              ACTIONS
         ========================================= -->
@@ -288,6 +292,8 @@
         <div
             id="statusMessage"
             class="status-message"
+            role="status"
+            aria-live="polite"
         ></div>
 
 
@@ -307,12 +313,13 @@
     </main>
 
 
-
     <!-- ========================================
          JAVASCRIPT
     ========================================= -->
 
-    <script src="./js/decision.js"></script>
+    <script
+        src="./js/decision.js"
+    ></script>
 
 </body>
 

@@ -1,353 +1,717 @@
 // ========================================
-// ENGINEERAI DECISION ANALYSIS
-// EXCEL-BASED DSS
+// ENGINEERAI DSS DECISION INPUT
+// 19-CRITERION MODEL
 // ========================================
 
 // ========================================
-// ELEMENTS
+// GET ELEMENTS
 // ========================================
 
-const criteriaTableBody = document.getElementById("criteriaTableBody");
+const criteriaTableBody =
+    document.getElementById("criteriaTableBody");
 
-const runAnalysisBtn = document.getElementById("runAnalysisBtn");
+const runAnalysisBtn =
+    document.getElementById("runAnalysisBtn");
 
-const resetAnalysisBtn = document.getElementById("resetAnalysisBtn");
+const statusMessage =
+    document.getElementById("statusMessage");
 
-const statusMessage = document.getElementById("statusMessage");
-
-// ========================================
-// ALTERNATIVE INPUTS
-// ========================================
-
-const alternativeInputs = [
-  document.getElementById("alternative0"),
-
-  document.getElementById("alternative1"),
-
-  document.getElementById("alternative2"),
-];
+const resetAnalysisBtn =
+    document.getElementById("resetAnalysisBtn");
 
 // ========================================
 // CRITERIA
-//
-// These MUST match the Excel workbook.
-// Excel remains the calculation engine.
 // ========================================
 
 const criteria = [
-  // ========================================
-  // TECHNICAL
-  // ========================================
 
-  {
-    category: "Technical",
-    name: "Laboratory Facilities",
-    type: "benefit",
-  },
+    // ========================================
+    // TECHNICAL - 5
+    // ========================================
 
-  {
-    category: "Technical",
-    name: "Process Equipment",
-    type: "benefit",
-  },
+    {
+        category: "Technical",
+        name: "Laboratory Facilities",
+        type: "benefit"
+    },
 
-  {
-    category: "Technical",
-    name: "Engineering Software",
-    type: "benefit",
-  },
+    {
+        category: "Technical",
+        name: "Process Equipment",
+        type: "benefit"
+    },
 
-  {
-    category: "Technical",
-    name: "Technical Manpower",
-    type: "benefit",
-  },
+    {
+        category: "Technical",
+        name: "Engineering Software",
+        type: "benefit"
+    },
 
-  {
-    category: "Technical",
-    name: "Process Optimization Capability",
-    type: "benefit",
-  },
+    {
+        category: "Technical",
+        name: "Technical Manpower",
+        type: "benefit"
+    },
 
-  // ========================================
-  // OPERATIONAL
-  // ========================================
+    {
+        category: "Technical",
+        name: "Process Optimization Capability",
+        type: "benefit"
+    },
 
-  {
-    category: "Operational",
-    name: "Infrastructure Availability",
-    type: "benefit",
-  },
+    // ========================================
+    // OPERATIONAL - 3
+    // ========================================
 
-  {
-    category: "Operational",
-    name: "Maintenance Systems",
-    type: "benefit",
-  },
+    {
+        category: "Operational",
+        name: "Infrastructure Availability",
+        type: "benefit"
+    },
 
-  {
-    category: "Operational",
-    name: "Industrial Utilities",
-    type: "benefit",
-  },
+    {
+        category: "Operational",
+        name: "Maintenance Systems",
+        type: "benefit"
+    },
 
-  // ========================================
-  // ENVIRONMENTAL & SAFETY
-  // ========================================
+    {
+        category: "Operational",
+        name: "Industrial Utilities",
+        type: "benefit"
+    },
 
-  {
-    category: "Environmental & Safety",
-    name: "Environmental Compliance",
-    type: "benefit",
-  },
+    // ========================================
+    // ENVIRONMENTAL & SAFETY - 4
+    // ========================================
 
-  {
-    category: "Environmental & Safety",
-    name: "Waste Management Capability",
-    type: "benefit",
-  },
+    {
+        category: "Environmental & Safety",
+        name: "Environmental Compliance",
+        type: "benefit"
+    },
 
-  {
-    category: "Environmental & Safety",
-    name: "HAZOP/HAZID Capability",
-    type: "benefit",
-  },
+    {
+        category: "Environmental & Safety",
+        name: "Waste Management Capability",
+        type: "benefit"
+    },
 
-  {
-    category: "Environmental & Safety",
-    name: "Safety Management Systems",
-    type: "benefit",
-  },
+    {
+        category: "Environmental & Safety",
+        name: "HAZOP/HAZID Capability",
+        type: "benefit"
+    },
 
-  // ========================================
-  // FINANCIAL
-  // ========================================
+    {
+        category: "Environmental & Safety",
+        name: "Safety Management Systems",
+        type: "benefit"
+    },
 
-  {
-    category: "Financial",
-    name: "Equipment Cost",
-    type: "benefit",
-  },
+    // ========================================
+    // FINANCIAL - 4
+    // ========================================
 
-  {
-    category: "Financial",
-    name: "Setup Cost",
-    type: "benefit",
-  },
+    {
+        category: "Financial",
+        name: "Equipment Cost",
+        type: "cost"
+    },
 
-  {
-    category: "Financial",
-    name: "Maintenance Cost",
-    type: "benefit",
-  },
+    {
+        category: "Financial",
+        name: "Setup Cost",
+        type: "cost"
+    },
 
-  // ========================================
-  // REGULATORY
-  // ========================================
+    {
+        category: "Financial",
+        name: "Operating Cost",
+        type: "cost"
+    },
 
-  {
-    category: "Regulatory",
-    name: "NUPRC Compliance",
-    type: "cost",
-  },
+    {
+        category: "Financial",
+        name: "Maintenance Cost",
+        type: "cost"
+    },
 
-  {
-    category: "Regulatory",
-    name: "Laboratory Certification",
-    type: "cost",
-  },
+    // ========================================
+    // REGULATORY - 3
+    // ========================================
 
-  {
-    category: "Regulatory",
-    name: "Environmental Permits",
-    type: "cost",
-  },
+    {
+        category: "Regulatory",
+        name: "NUPRC Compliance",
+        type: "benefit"
+    },
+
+    {
+        category: "Regulatory",
+        name: "Laboratory Certification",
+        type: "benefit"
+    },
+
+    {
+        category: "Regulatory",
+        name: "Environmental Permits",
+        type: "benefit"
+    }
+
 ];
 
 // ========================================
-// API
+// DEFAULT ALTERNATIVES
 // ========================================
 
-const API_BASE_URL = "https://engineerai-dss.onrender.com";
+const alternatives = [
+
+    "Process Optimization-Focused Firm",
+
+    "Environmental Compliance-Focused Firm",
+
+    "Laboratory Testing-Focused Firm"
+
+];
 
 // ========================================
-// GENERATE TABLE
+// API URL
+// ========================================
+//
+// LOCAL:
+// http://localhost:5000
+//
+// PRODUCTION:
+// We will put the Railway URL here AFTER
+// local testing succeeds.
+//
+// ========================================
+
+const API_BASE_URL =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+        ? "http://localhost:5000"
+        : "https://YOUR-RAILWAY-BACKEND-URL";
+
+// ========================================
+// GENERATE CRITERIA TABLE
 // ========================================
 
 function generateCriteriaTable() {
-  criteriaTableBody.innerHTML = "";
 
-  let currentCategory = "";
+    criteriaTableBody.innerHTML = "";
 
-  criteria.forEach((criterion, index) => {
-    // ========================================
-    // CATEGORY HEADER
-    // ========================================
+    let currentCategory = "";
 
-    if (criterion.category !== currentCategory) {
-      currentCategory = criterion.category;
+    criteria.forEach(
+        (criterion, index) => {
 
-      const categoryRow = document.createElement("tr");
+            // ========================================
+            // CATEGORY ROW
+            // ========================================
 
-      categoryRow.className = "category-row";
+            if (
+                criterion.category !==
+                currentCategory
+            ) {
 
-      categoryRow.innerHTML = `
+                currentCategory =
+                    criterion.category;
 
+                const categoryRow =
+                    document.createElement("tr");
+
+                categoryRow.className =
+                    "category-row";
+
+                categoryRow.innerHTML = `
                     <td colspan="6">
                         ${criterion.category}
                     </td>
-
                 `;
 
-      criteriaTableBody.appendChild(categoryRow);
-    }
+                criteriaTableBody.appendChild(
+                    categoryRow
+                );
 
-    // ========================================
-    // CRITERION ROW
-    // ========================================
+            }
 
-    const row = document.createElement("tr");
+            // ========================================
+            // CRITERION ROW
+            // ========================================
 
-    row.innerHTML = `
+            const row =
+                document.createElement("tr");
 
-                <td class="criteria-number">
+            const isCost =
+                criterion.type === "cost";
+
+            const inputAttributes =
+                isCost
+                    ? `
+                        type="number"
+                        class="score-input financial-input"
+                        min="0.01"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="e.g. 6958400"
+                      `
+                    : `
+                        type="number"
+                        class="score-input"
+                        min="1"
+                        max="10"
+                        step="1"
+                        inputmode="numeric"
+                        placeholder="1-10"
+                      `;
+
+            row.innerHTML = `
+
+                <td>
                     ${index + 1}
-                </td>
-
-                <td class="criterion-name">
-                    ${criterion.name}
                 </td>
 
                 <td>
 
-                    <span
-                        class="type-badge type-${criterion.type}"
-                    >
+                    <strong>
+                        ${criterion.name}
+                    </strong>
+
+                    ${
+                        isCost
+                            ? `
+                                <small class="criterion-help">
+                                    Enter actual amount in ₦
+                                </small>
+                              `
+                            : `
+                                <small class="criterion-help">
+                                    Rate from 1 to 10
+                                </small>
+                              `
+                    }
+
+                </td>
+
+                <td>
+
+                    <span class="criterion-type">
                         ${criterion.type}
                     </span>
 
                 </td>
 
-                ${createScoreInput(index, 0, criterion.name)}
+                <td>
 
-                ${createScoreInput(index, 1, criterion.name)}
+                    <input
+                        ${inputAttributes}
+                        data-criterion="${criterion.name}"
+                        data-index="${index}"
+                        data-alternative="0"
+                        aria-label="${criterion.name} - Alternative 1"
+                    >
 
-                ${createScoreInput(index, 2, criterion.name)}
+                </td>
+
+                <td>
+
+                    <input
+                        ${inputAttributes}
+                        data-criterion="${criterion.name}"
+                        data-index="${index}"
+                        data-alternative="1"
+                        aria-label="${criterion.name} - Alternative 2"
+                    >
+
+                </td>
+
+                <td>
+
+                    <input
+                        ${inputAttributes}
+                        data-criterion="${criterion.name}"
+                        data-index="${index}"
+                        data-alternative="2"
+                        aria-label="${criterion.name} - Alternative 3"
+                    >
+
+                </td>
 
             `;
 
-    criteriaTableBody.appendChild(row);
-  });
+            criteriaTableBody.appendChild(
+                row
+            );
+
+        }
+    );
+
+    updateAlternativeHeaders();
+
+    attachInputListeners();
+
 }
 
 // ========================================
-// SCORE INPUT
+// UPDATE ALTERNATIVE HEADERS
 // ========================================
 
-function createScoreInput(criterionIndex, alternativeIndex, criterionName) {
-  return `
+function updateAlternativeHeaders() {
 
-        <td>
+    alternatives.forEach(
+        (alternative, index) => {
 
-            <input
-                type="number"
-                class="score-input"
-                min="1"
-                max="10"
-                step="1"
-                placeholder="1-10"
+            const input =
+                document.getElementById(
+                    `alternative${index}`
+                );
 
-                data-index="${criterionIndex}"
+            const header =
+                document.getElementById(
+                    `alternativeHeader${index}`
+                );
 
-                data-alternative="${alternativeIndex}"
+            if (
+                !input ||
+                !header
+            ) {
+                return;
+            }
 
-                data-criterion="${criterionName}"
-            >
+            const update =
+                () => {
 
-        </td>
+                    const value =
+                        input.value.trim();
 
-    `;
+                    header.textContent =
+                        value ||
+                        `Alternative ${index + 1}`;
+
+                };
+
+            input.addEventListener(
+                "input",
+                update
+            );
+
+            update();
+
+        }
+    );
+
+}
+
+// ========================================
+// INPUT STATUS
+// ========================================
+
+function attachInputListeners() {
+
+    const inputs =
+        document.querySelectorAll(
+            ".score-input"
+        );
+
+    inputs.forEach(
+        (input) => {
+
+            input.addEventListener(
+                "input",
+                () => {
+
+                    statusMessage.textContent =
+                        "";
+
+                }
+            );
+
+        }
+    );
+
 }
 
 // ========================================
 // GET ALTERNATIVE NAMES
 // ========================================
 
-function getAlternatives() {
-  const alternatives = alternativeInputs.map((input) => input.value.trim());
+function getAlternativeNames() {
 
-  alternatives.forEach((name, index) => {
-    if (!name) {
-      throw new Error(`Please enter a name for Alternative ${index + 1}.`);
+    const names =
+        alternatives.map(
+            (_, index) => {
+
+                const input =
+                    document.getElementById(
+                        `alternative${index}`
+                    );
+
+                return input
+                    ? input.value.trim()
+                    : "";
+
+            }
+        );
+
+    names.forEach(
+        (name, index) => {
+
+            if (!name) {
+
+                throw new Error(
+                    `Please enter a name for Alternative ${
+                        index + 1
+                    }.`
+                );
+
+            }
+
+        }
+    );
+
+    const normalized =
+        names.map(
+            (name) =>
+                name.toLowerCase()
+        );
+
+    if (
+        new Set(normalized).size !== 3
+    ) {
+
+        throw new Error(
+            "Alternative names must be unique."
+        );
+
     }
-  });
 
-  const uniqueNames = new Set(alternatives.map((name) => name.toLowerCase()));
+    return names;
 
-  if (uniqueNames.size !== 3) {
-    throw new Error("Each alternative must have a different name.");
-  }
-
-  return alternatives;
 }
 
 // ========================================
 // GET DECISION MATRIX
 // ========================================
+//
+// Backend expects:
+//
+// 3 alternatives × 19 criteria
+//
+// Financial:
+// actual ₦ amount
+//
+// Everything else:
+// 1 - 10
+//
+// ========================================
 
 function getDecisionMatrix() {
-  const inputs = document.querySelectorAll(".score-input");
 
-  if (inputs.length !== 54) {
-    throw new Error(
-      `The system expected 54 score fields but found ${inputs.length}.`,
-    );
-  }
+    const inputs =
+        document.querySelectorAll(
+            ".score-input"
+        );
 
-  // ========================================
-  // 3 ALTERNATIVES × 18 CRITERIA
-  // ========================================
-
-  const decisionMatrix = [
-    new Array(18).fill(null),
-
-    new Array(18).fill(null),
-
-    new Array(18).fill(null),
-  ];
-
-  inputs.forEach((input) => {
-    const criterionIndex = Number(input.dataset.index);
-
-    const alternativeIndex = Number(input.dataset.alternative);
-
-    const value = Number(input.value);
+    const expectedInputs =
+        criteria.length * 3;
 
     if (
-      input.value === "" ||
-      !Number.isFinite(value) ||
-      value < 1 ||
-      value > 10
+        inputs.length !==
+        expectedInputs
     ) {
-      throw new Error(
-        `Enter a score from 1 to 10 for "${input.dataset.criterion}".`,
-      );
+
+        throw new Error(
+            `The system expected ${
+                expectedInputs
+            } input fields but found ${
+                inputs.length
+            }.`
+        );
+
     }
 
-    decisionMatrix[alternativeIndex][criterionIndex] = value;
-  });
+    const decisionMatrix = [
 
-  decisionMatrix.forEach((row, alternativeIndex) => {
-    row.forEach((value, criterionIndex) => {
-      if (value === null || value === undefined) {
-        throw new Error(
-          `Missing score for Alternative ${alternativeIndex + 1}, criterion ${criterionIndex + 1}.`,
-        );
-      }
-    });
-  });
+        new Array(
+            criteria.length
+        ).fill(null),
 
-  return decisionMatrix;
+        new Array(
+            criteria.length
+        ).fill(null),
+
+        new Array(
+            criteria.length
+        ).fill(null)
+
+    ];
+
+    inputs.forEach(
+        (input) => {
+
+            const criterionIndex =
+                Number(
+                    input.dataset.index
+                );
+
+            const alternativeIndex =
+                Number(
+                    input.dataset.alternative
+                );
+
+            const criterion =
+                criteria[
+                    criterionIndex
+                ];
+
+            const rawValue =
+                input.value.trim();
+
+            const value =
+                Number(rawValue);
+
+            // ========================================
+            // GENERAL VALIDATION
+            // ========================================
+
+            if (
+                rawValue === "" ||
+                !Number.isFinite(value)
+            ) {
+
+                throw new Error(
+                    `Enter a valid value for "${
+                        criterion.name
+                    }" in Alternative ${
+                        alternativeIndex + 1
+                    }.`
+                );
+
+            }
+
+            // ========================================
+            // FINANCIAL VALIDATION
+            // ========================================
+
+            if (
+                criterion.type === "cost"
+            ) {
+
+                if (
+                    value <= 0
+                ) {
+
+                    throw new Error(
+                        `"${criterion.name}" must be greater than ₦0 for Alternative ${
+                            alternativeIndex + 1
+                        }.`
+                    );
+
+                }
+
+            }
+
+            // ========================================
+            // NON-FINANCIAL VALIDATION
+            // ========================================
+
+            else {
+
+                if (
+                    value < 1 ||
+                    value > 10
+                ) {
+
+                    throw new Error(
+                        `"${criterion.name}" must be between 1 and 10 for Alternative ${
+                            alternativeIndex + 1
+                        }.`
+                    );
+
+                }
+
+                if (
+                    !Number.isInteger(value)
+                ) {
+
+                    throw new Error(
+                        `"${criterion.name}" must be a whole number from 1 to 10.`
+                    );
+
+                }
+
+            }
+
+            // ========================================
+            // STORE VALUE
+            // ========================================
+
+            decisionMatrix[
+                alternativeIndex
+            ][
+                criterionIndex
+            ] = value;
+
+        }
+    );
+
+    // ========================================
+    // FINAL VALIDATION
+    // ========================================
+
+    decisionMatrix.forEach(
+        (row, alternativeIndex) => {
+
+            if (
+                row.length !==
+                criteria.length
+            ) {
+
+                throw new Error(
+                    `Alternative ${
+                        alternativeIndex + 1
+                    } does not contain ${
+                        criteria.length
+                    } criteria.`
+                );
+
+            }
+
+            row.forEach(
+                (value, criterionIndex) => {
+
+                    if (
+                        value === null ||
+                        value === undefined
+                    ) {
+
+                        throw new Error(
+                            `Missing value for "${
+                                criteria[
+                                    criterionIndex
+                                ].name
+                            }" in Alternative ${
+                                alternativeIndex + 1
+                            }.`
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+    console.log(
+        "FINAL 19-CRITERION DECISION MATRIX:",
+        decisionMatrix
+    );
+
+    return decisionMatrix;
+
 }
 
 // ========================================
@@ -355,126 +719,235 @@ function getDecisionMatrix() {
 // ========================================
 
 function getCriteriaTypes() {
-  return criteria.map((criterion) => criterion.type);
+
+    return criteria.map(
+        (criterion) =>
+            criterion.type
+    );
+
 }
 
 // ========================================
-// RUN ANALYSIS
+// RUN DSS ANALYSIS
 // ========================================
 
 async function runAnalysis() {
-  try {
-    runAnalysisBtn.disabled = true;
-
-    statusMessage.textContent = "Sending decision data to Excel...";
-
-    // ========================================
-    // ALTERNATIVES
-    // ========================================
-
-    const alternatives = getAlternatives();
-
-    // ========================================
-    // MATRIX
-    // ========================================
-
-    const decisionMatrix = getDecisionMatrix();
-
-    // ========================================
-    // TYPES
-    // ========================================
-
-    const criteriaTypes = getCriteriaTypes();
-
-    console.log("Alternatives:", alternatives);
-
-    console.log("Decision Matrix:", decisionMatrix);
-
-    // ========================================
-    // SEND TO EXPRESS
-    // ========================================
-
-    const response = await fetch(`${API_BASE_URL}/api/dss/run`, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        decisionMatrix,
-
-        alternatives,
-
-        criteriaTypes,
-      }),
-    });
-
-    // ========================================
-    // READ RESPONSE SAFELY
-    // ========================================
-
-    const rawResponse = await response.text();
-
-    let data;
 
     try {
-      data = JSON.parse(rawResponse);
-    } catch (error) {
-      throw new Error(
-        `Server returned an invalid response: ${rawResponse.substring(0, 300)}`,
-      );
+
+        // ========================================
+        // DISABLE BUTTON
+        // ========================================
+
+        runAnalysisBtn.disabled =
+            true;
+
+        statusMessage.textContent =
+            "Running decision analysis...";
+
+        // ========================================
+        // GET ALTERNATIVES
+        // ========================================
+
+        const currentAlternatives =
+            getAlternativeNames();
+
+        // ========================================
+        // GET MATRIX
+        // ========================================
+
+        const decisionMatrix =
+            getDecisionMatrix();
+
+        // ========================================
+        // GET CRITERIA TYPES
+        // ========================================
+
+        const criteriaTypes =
+            getCriteriaTypes();
+
+        // ========================================
+        // DEBUG
+        // ========================================
+
+        console.log(
+            "Alternatives:",
+            currentAlternatives
+        );
+
+        console.log(
+            "Alternatives count:",
+            currentAlternatives.length
+        );
+
+        console.log(
+            "Criteria count:",
+            criteria.length
+        );
+
+        console.log(
+            "Criteria types:",
+            criteriaTypes
+        );
+
+        console.log(
+            "Decision matrix:",
+            decisionMatrix
+        );
+
+        console.log(
+            "Decision matrix rows:",
+            decisionMatrix.length
+        );
+
+        console.log(
+            "Decision matrix columns:",
+            decisionMatrix[0].length
+        );
+
+        // ========================================
+        // SEND TO BACKEND
+        // ========================================
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}/api/dss/run`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            decisionMatrix,
+
+                            alternatives:
+                                currentAlternatives,
+
+                            criteriaTypes
+
+                        })
+
+                }
+            );
+
+        // ========================================
+        // READ RESPONSE
+        // ========================================
+
+        let data;
+
+        try {
+
+            data =
+                await response.json();
+
+        }
+
+        catch {
+
+            throw new Error(
+                `Server returned an invalid response (${
+                    response.status
+                }).`
+            );
+
+        }
+
+        console.log(
+            "DSS Server Response:",
+            data
+        );
+
+        // ========================================
+        // SERVER ERROR
+        // ========================================
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+
+                data.message ||
+                data.error ||
+                `Server error: ${
+                    response.status
+                }`
+
+            );
+
+        }
+
+        // ========================================
+        // DSS ERROR
+        // ========================================
+
+        if (
+            !data.success
+        ) {
+
+            throw new Error(
+
+                data.message ||
+                data.error ||
+                "DSS analysis failed."
+
+            );
+
+        }
+
+        // ========================================
+        // SAVE RESULT
+        // ========================================
+
+        sessionStorage.setItem(
+
+            "dssResult",
+
+            JSON.stringify(
+                data.result
+            )
+
+        );
+
+        // ========================================
+        // SUCCESS
+        // ========================================
+
+        statusMessage.textContent =
+            "Analysis completed successfully. Redirecting...";
+
+        // ========================================
+        // DASHBOARD
+        // ========================================
+
+        window.location.href =
+            "./dashboard.html";
+
     }
 
-    if (!response.ok) {
-      throw new Error(
-        data.message || data.error || `Server error: ${response.status}`,
-      );
+    catch (error) {
+
+        console.error(
+            "DSS Analysis Error:",
+            error
+        );
+
+        statusMessage.textContent =
+            error.message ||
+            "Unable to run DSS analysis.";
+
+        runAnalysisBtn.disabled =
+            false;
+
     }
 
-    if (!data.success) {
-      throw new Error(
-        data.message || data.error || "Decision analysis failed.",
-      );
-    }
-
-    // ========================================
-    // SAVE RESULT
-    // ========================================
-
-    sessionStorage.setItem(
-      "dssResult",
-
-      JSON.stringify(data.result),
-    );
-
-    // ========================================
-    // SAVE ALTERNATIVE NAMES
-    // ========================================
-
-    sessionStorage.setItem(
-      "dssAlternatives",
-
-      JSON.stringify(alternatives),
-    );
-
-    // ========================================
-    // SUCCESS
-    // ========================================
-
-    statusMessage.textContent =
-      "Excel analysis completed successfully. Redirecting...";
-
-    setTimeout(() => {
-      window.location.href = "dashboard.html";
-    }, 500);
-  } catch (error) {
-    console.error("DSS Analysis Error:", error);
-
-    statusMessage.textContent = error.message;
-
-    runAnalysisBtn.disabled = false;
-  }
 }
 
 // ========================================
@@ -482,44 +955,50 @@ async function runAnalysis() {
 // ========================================
 
 function resetAnalysis() {
-  alternativeInputs.forEach((input) => {
-    input.value = "";
-  });
 
-  document.querySelectorAll(".score-input").forEach((input) => {
-    input.value = "";
-  });
+    const inputs =
+        document.querySelectorAll(
+            ".score-input"
+        );
 
-  document.getElementById("alternativeHeader0").textContent = "Alternative 1";
+    inputs.forEach(
+        (input) => {
 
-  document.getElementById("alternativeHeader1").textContent = "Alternative 2";
+            input.value = "";
 
-  document.getElementById("alternativeHeader2").textContent = "Alternative 3";
+        }
+    );
 
-  statusMessage.textContent = "All decision data has been cleared.";
+    statusMessage.textContent =
+        "All scores have been cleared.";
+
 }
-
-// ========================================
-// UPDATE TABLE HEADERS
-// ========================================
-
-alternativeInputs.forEach((input, index) => {
-  input.addEventListener("input", () => {
-    const name = input.value.trim();
-
-    const header = document.getElementById(`alternativeHeader${index}`);
-
-    header.textContent = name || `Alternative ${index + 1}`;
-  });
-});
 
 // ========================================
 // BUTTON EVENTS
 // ========================================
 
-runAnalysisBtn.addEventListener("click", runAnalysis);
+if (
+    runAnalysisBtn
+) {
 
-resetAnalysisBtn.addEventListener("click", resetAnalysis);
+    runAnalysisBtn.addEventListener(
+        "click",
+        runAnalysis
+    );
+
+}
+
+if (
+    resetAnalysisBtn
+) {
+
+    resetAnalysisBtn.addEventListener(
+        "click",
+        resetAnalysis
+    );
+
+}
 
 // ========================================
 // INITIALIZE
