@@ -52,16 +52,13 @@
 
     </header>
 
-
     <!-- ========================================
          MAIN
     ========================================= -->
 
     <main class="decision-page">
 
-        <!-- ========================================
-             PAGE HEADER
-        ========================================= -->
+        <!-- HEADER -->
 
         <section class="page-header">
 
@@ -77,10 +74,7 @@
 
         </section>
 
-
-        <!-- ========================================
-             ALTERNATIVES
-        ========================================= -->
+        <!-- ALTERNATIVES -->
 
         <section class="card">
 
@@ -97,7 +91,6 @@
 
             </div>
 
-
             <div class="alternatives-grid">
 
                 <div class="alternative-field">
@@ -110,12 +103,11 @@
                         type="text"
                         id="alternative0"
                         class="alternative-input"
-                        placeholder="e.g. Process Optimization Firm"
+                        placeholder="e.g. Solar Power Plant"
                         autocomplete="off"
                     >
 
                 </div>
-
 
                 <div class="alternative-field">
 
@@ -127,12 +119,11 @@
                         type="text"
                         id="alternative1"
                         class="alternative-input"
-                        placeholder="e.g. Environmental Compliance Firm"
+                        placeholder="e.g. Gas Power Plant"
                         autocomplete="off"
                     >
 
                 </div>
-
 
                 <div class="alternative-field">
 
@@ -144,7 +135,7 @@
                         type="text"
                         id="alternative2"
                         class="alternative-input"
-                        placeholder="e.g. Laboratory Testing Firm"
+                        placeholder="e.g. Hydroelectric Plant"
                         autocomplete="off"
                     >
 
@@ -154,10 +145,7 @@
 
         </section>
 
-
-        <!-- ========================================
-             MODEL INFORMATION
-        ========================================= -->
+        <!-- MODEL INFORMATION -->
 
         <section class="info-box">
 
@@ -174,24 +162,28 @@
             </p>
 
             <p>
-                The model contains 19 TOPSIS criteria:
-                5 Technical, 3 Operational,
+                The model contains
+                <strong>22 TOPSIS criteria</strong>:
+                5 Technical,
+                3 Operational,
                 4 Environmental &amp; Safety,
-                4 Financial and 3 Regulatory.
+                4 Financial and
+                6 Regulatory.
             </p>
 
             <p>
-                Non-financial criteria are rated from
-                1 to 10. Financial criteria are entered
-                as actual Nigerian Naira amounts.
+                Regulatory criteria include:
+                NUPRC Compliance,
+                NMDPRA Compliance,
+                NCDMB Compliance,
+                NOSDRA Compliance,
+                Laboratory Certification and
+                Environmental Permits.
             </p>
 
         </section>
 
-
-        <!-- ========================================
-             DECISION SCORES
-        ========================================= -->
+        <!-- SCORE CARD -->
 
         <section class="card">
 
@@ -209,7 +201,6 @@
                 </p>
 
             </div>
-
 
             <div class="table-wrapper">
 
@@ -247,9 +238,7 @@
 
                     </thead>
 
-
                     <tbody id="criteriaTableBody">
-
                     </tbody>
 
                 </table>
@@ -258,10 +247,7 @@
 
         </section>
 
-
-        <!-- ========================================
-             ACTIONS
-        ========================================= -->
+        <!-- ACTIONS -->
 
         <section class="actions">
 
@@ -273,7 +259,6 @@
                 Reset Scores
             </button>
 
-
             <button
                 type="button"
                 id="runAnalysisBtn"
@@ -284,22 +269,14 @@
 
         </section>
 
-
-        <!-- ========================================
-             STATUS
-        ========================================= -->
+        <!-- STATUS -->
 
         <div
             id="statusMessage"
             class="status-message"
-            role="status"
-            aria-live="polite"
         ></div>
 
-
-        <!-- ========================================
-             DISCLAIMER
-        ========================================= -->
+        <!-- DISCLAIMER -->
 
         <p class="disclaimer">
 
@@ -312,14 +289,9 @@
 
     </main>
 
+    <!-- JAVASCRIPT -->
 
-    <!-- ========================================
-         JAVASCRIPT
-    ========================================= -->
-
-    <script
-        src="./js/decision.js"
-    ></script>
+    <script src="./js/decision.js"></script>
 
 </body>
 

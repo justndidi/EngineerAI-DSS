@@ -1,10 +1,10 @@
 // ========================================
 // ENGINEERAI DSS DECISION INPUT
-// 19-CRITERION MODEL
+// 22-CRITERION MODEL
 // ========================================
 
 // ========================================
-// GET ELEMENTS
+// ELEMENTS
 // ========================================
 
 const criteriaTableBody =
@@ -20,7 +20,7 @@ const resetAnalysisBtn =
     document.getElementById("resetAnalysisBtn");
 
 // ========================================
-// CRITERIA
+// 22 CRITERIA
 // ========================================
 
 const criteria = [
@@ -34,25 +34,21 @@ const criteria = [
         name: "Laboratory Facilities",
         type: "benefit"
     },
-
     {
         category: "Technical",
         name: "Process Equipment",
         type: "benefit"
     },
-
     {
         category: "Technical",
         name: "Engineering Software",
         type: "benefit"
     },
-
     {
         category: "Technical",
         name: "Technical Manpower",
         type: "benefit"
     },
-
     {
         category: "Technical",
         name: "Process Optimization Capability",
@@ -68,13 +64,11 @@ const criteria = [
         name: "Infrastructure Availability",
         type: "benefit"
     },
-
     {
         category: "Operational",
         name: "Maintenance Systems",
         type: "benefit"
     },
-
     {
         category: "Operational",
         name: "Industrial Utilities",
@@ -90,19 +84,16 @@ const criteria = [
         name: "Environmental Compliance",
         type: "benefit"
     },
-
     {
         category: "Environmental & Safety",
         name: "Waste Management Capability",
         type: "benefit"
     },
-
     {
         category: "Environmental & Safety",
         name: "HAZOP/HAZID Capability",
         type: "benefit"
     },
-
     {
         category: "Environmental & Safety",
         name: "Safety Management Systems",
@@ -118,19 +109,16 @@ const criteria = [
         name: "Equipment Cost",
         type: "cost"
     },
-
     {
         category: "Financial",
         name: "Setup Cost",
         type: "cost"
     },
-
     {
         category: "Financial",
         name: "Operating Cost",
         type: "cost"
     },
-
     {
         category: "Financial",
         name: "Maintenance Cost",
@@ -138,7 +126,7 @@ const criteria = [
     },
 
     // ========================================
-    // REGULATORY - 3
+    // REGULATORY - 6
     // ========================================
 
     {
@@ -146,13 +134,26 @@ const criteria = [
         name: "NUPRC Compliance",
         type: "benefit"
     },
-
+    {
+        category: "Regulatory",
+        name: "NMDPRA Compliance",
+        type: "benefit"
+    },
+    {
+        category: "Regulatory",
+        name: "NCDMB Compliance",
+        type: "benefit"
+    },
+    {
+        category: "Regulatory",
+        name: "NOSDRA Compliance",
+        type: "benefit"
+    },
     {
         category: "Regulatory",
         name: "Laboratory Certification",
         type: "benefit"
     },
-
     {
         category: "Regulatory",
         name: "Environmental Permits",
@@ -166,32 +167,19 @@ const criteria = [
 // ========================================
 
 const alternatives = [
-
     "Process Optimization-Focused Firm",
-
     "Environmental Compliance-Focused Firm",
-
     "Laboratory Testing-Focused Firm"
-
 ];
 
 // ========================================
-// API URL
-// ========================================
-//
-// LOCAL:
-// http://localhost:5000
-//
-// PRODUCTION:
-// We will put the Railway URL here AFTER
-// local testing succeeds.
-//
+// API
 // ========================================
 
-const API_BASE_URL = "https://engineerai-dss-production.up.railway.app";
+const API_BASE_URL = "http://localhost:5000";
 
 // ========================================
-// GENERATE CRITERIA TABLE
+// GENERATE TABLE
 // ========================================
 
 function generateCriteriaTable() {
@@ -200,616 +188,310 @@ function generateCriteriaTable() {
 
     let currentCategory = "";
 
-    criteria.forEach(
-        (criterion, index) => {
+    criteria.forEach((criterion, index) => {
 
-            // ========================================
-            // CATEGORY ROW
-            // ========================================
+        // Category header
+        if (criterion.category !== currentCategory) {
 
-            if (
-                criterion.category !==
-                currentCategory
-            ) {
+            currentCategory = criterion.category;
 
-                currentCategory =
-                    criterion.category;
-
-                const categoryRow =
-                    document.createElement("tr");
-
-                categoryRow.className =
-                    "category-row";
-
-                categoryRow.innerHTML = `
-                    <td colspan="6">
-                        ${criterion.category}
-                    </td>
-                `;
-
-                criteriaTableBody.appendChild(
-                    categoryRow
-                );
-
-            }
-
-            // ========================================
-            // CRITERION ROW
-            // ========================================
-
-            const row =
+            const categoryRow =
                 document.createElement("tr");
 
-            const isCost =
-                criterion.type === "cost";
+            categoryRow.className =
+                "category-row";
 
-            const inputAttributes =
-                isCost
-                    ? `
-                        type="number"
-                        class="score-input financial-input"
-                        min="0.01"
-                        step="0.01"
-                        inputmode="decimal"
-                        placeholder="e.g. 6958400"
-                      `
-                    : `
-                        type="number"
-                        class="score-input"
-                        min="1"
-                        max="10"
-                        step="1"
-                        inputmode="numeric"
-                        placeholder="1-10"
-                      `;
+            const categoryCell =
+                document.createElement("td");
 
-            row.innerHTML = `
+            categoryCell.colSpan = 6;
 
-                <td>
-                    ${index + 1}
-                </td>
+            categoryCell.textContent =
+                criterion.category;
 
-                <td>
-
-                    <strong>
-                        ${criterion.name}
-                    </strong>
-
-                    ${
-                        isCost
-                            ? `
-                                <small class="criterion-help">
-                                    Enter actual amount in ₦
-                                </small>
-                              `
-                            : `
-                                <small class="criterion-help">
-                                    Rate from 1 to 10
-                                </small>
-                              `
-                    }
-
-                </td>
-
-                <td>
-
-                    <span class="criterion-type">
-                        ${criterion.type}
-                    </span>
-
-                </td>
-
-                <td>
-
-                    <input
-                        ${inputAttributes}
-                        data-criterion="${criterion.name}"
-                        data-index="${index}"
-                        data-alternative="0"
-                        aria-label="${criterion.name} - Alternative 1"
-                    >
-
-                </td>
-
-                <td>
-
-                    <input
-                        ${inputAttributes}
-                        data-criterion="${criterion.name}"
-                        data-index="${index}"
-                        data-alternative="1"
-                        aria-label="${criterion.name} - Alternative 2"
-                    >
-
-                </td>
-
-                <td>
-
-                    <input
-                        ${inputAttributes}
-                        data-criterion="${criterion.name}"
-                        data-index="${index}"
-                        data-alternative="2"
-                        aria-label="${criterion.name} - Alternative 3"
-                    >
-
-                </td>
-
-            `;
+            categoryRow.appendChild(categoryCell);
 
             criteriaTableBody.appendChild(
-                row
+                categoryRow
             );
-
         }
-    );
+
+        const row =
+            document.createElement("tr");
+
+        const numberCell =
+            document.createElement("td");
+
+        numberCell.textContent =
+            index + 1;
+
+        const criterionCell =
+            document.createElement("td");
+
+        criterionCell.textContent =
+            criterion.name;
+
+        const typeCell =
+            document.createElement("td");
+
+        typeCell.textContent =
+            criterion.type === "cost"
+                ? "Cost"
+                : "Benefit";
+
+        row.appendChild(numberCell);
+        row.appendChild(criterionCell);
+        row.appendChild(typeCell);
+
+        for (let alternativeIndex = 0; alternativeIndex < 3; alternativeIndex++) {
+
+            const cell =
+                document.createElement("td");
+
+            const input =
+                document.createElement("input");
+
+            input.type = "number";
+
+            input.className =
+                "score-input";
+
+            input.dataset.criterionIndex =
+                index;
+
+            input.dataset.alternativeIndex =
+                alternativeIndex;
+
+            input.required = true;
+
+            if (criterion.type === "cost") {
+
+                input.min = "0.01";
+                input.step = "0.01";
+
+                input.placeholder =
+                    "Enter amount in ₦";
+
+                input.title =
+                    "Enter actual amount in Nigerian Naira";
+
+            } else {
+
+                input.min = "1";
+                input.max = "10";
+                input.step = "1";
+
+                input.placeholder =
+                    "1 - 10";
+            }
+
+            cell.appendChild(input);
+
+            row.appendChild(cell);
+        }
+
+        criteriaTableBody.appendChild(row);
+    });
 
     updateAlternativeHeaders();
-
-    attachInputListeners();
-
 }
 
 // ========================================
-// UPDATE ALTERNATIVE HEADERS
+// ALTERNATIVE HEADERS
 // ========================================
 
 function updateAlternativeHeaders() {
 
-    alternatives.forEach(
-        (alternative, index) => {
+    for (let i = 0; i < 3; i++) {
 
-            const input =
-                document.getElementById(
-                    `alternative${index}`
-                );
-
-            const header =
-                document.getElementById(
-                    `alternativeHeader${index}`
-                );
-
-            if (
-                !input ||
-                !header
-            ) {
-                return;
-            }
-
-            const update =
-                () => {
-
-                    const value =
-                        input.value.trim();
-
-                    header.textContent =
-                        value ||
-                        `Alternative ${index + 1}`;
-
-                };
-
-            input.addEventListener(
-                "input",
-                update
+        const input =
+            document.getElementById(
+                `alternative${i}`
             );
 
-            update();
-
-        }
-    );
-
-}
-
-// ========================================
-// INPUT STATUS
-// ========================================
-
-function attachInputListeners() {
-
-    const inputs =
-        document.querySelectorAll(
-            ".score-input"
-        );
-
-    inputs.forEach(
-        (input) => {
-
-            input.addEventListener(
-                "input",
-                () => {
-
-                    statusMessage.textContent =
-                        "";
-
-                }
+        const header =
+            document.getElementById(
+                `alternativeHeader${i}`
             );
 
+        if (!input || !header) {
+            continue;
         }
-    );
 
-}
+        const update = () => {
 
-// ========================================
-// GET ALTERNATIVE NAMES
-// ========================================
+            header.textContent =
+                input.value.trim() ||
+                `Alternative ${i + 1}`;
+        };
 
-function getAlternativeNames() {
-
-    const names =
-        alternatives.map(
-            (_, index) => {
-
-                const input =
-                    document.getElementById(
-                        `alternative${index}`
-                    );
-
-                return input
-                    ? input.value.trim()
-                    : "";
-
-            }
+        input.addEventListener(
+            "input",
+            update
         );
 
-    names.forEach(
-        (name, index) => {
-
-            if (!name) {
-
-                throw new Error(
-                    `Please enter a name for Alternative ${
-                        index + 1
-                    }.`
-                );
-
-            }
-
-        }
-    );
-
-    const normalized =
-        names.map(
-            (name) =>
-                name.toLowerCase()
-        );
-
-    if (
-        new Set(normalized).size !== 3
-    ) {
-
-        throw new Error(
-            "Alternative names must be unique."
-        );
-
+        update();
     }
+}
 
-    return names;
+// ========================================
+// GET ALTERNATIVES
+// ========================================
 
+function getAlternatives() {
+
+    return [0, 1, 2].map(index => {
+
+        const input =
+            document.getElementById(
+                `alternative${index}`
+            );
+
+        return input.value.trim();
+    });
 }
 
 // ========================================
 // GET DECISION MATRIX
 // ========================================
-//
-// Backend expects:
-//
-// 3 alternatives × 19 criteria
-//
-// Financial:
-// actual ₦ amount
-//
-// Everything else:
-// 1 - 10
-//
-// ========================================
 
 function getDecisionMatrix() {
+
+    const matrix = [
+        [],
+        [],
+        []
+    ];
 
     const inputs =
         document.querySelectorAll(
             ".score-input"
         );
 
-    const expectedInputs =
-        criteria.length * 3;
-
-    if (
-        inputs.length !==
-        expectedInputs
-    ) {
+    if (inputs.length !== 66) {
 
         throw new Error(
-            `The system expected ${
-                expectedInputs
-            } input fields but found ${
-                inputs.length
-            }.`
+            `Expected 66 input fields, but found ${inputs.length}.`
         );
-
     }
 
-    const decisionMatrix = [
+    inputs.forEach(input => {
 
-        new Array(
-            criteria.length
-        ).fill(null),
-
-        new Array(
-            criteria.length
-        ).fill(null),
-
-        new Array(
-            criteria.length
-        ).fill(null)
-
-    ];
-
-    inputs.forEach(
-        (input) => {
-
-            const criterionIndex =
-                Number(
-                    input.dataset.index
-                );
-
-            const alternativeIndex =
-                Number(
-                    input.dataset.alternative
-                );
-
-            const criterion =
-                criteria[
-                    criterionIndex
-                ];
-
-            const rawValue =
-                input.value.trim();
-
-            const value =
-                Number(rawValue);
-
-            // ========================================
-            // GENERAL VALIDATION
-            // ========================================
-
-            if (
-                rawValue === "" ||
-                !Number.isFinite(value)
-            ) {
-
-                throw new Error(
-                    `Enter a valid value for "${
-                        criterion.name
-                    }" in Alternative ${
-                        alternativeIndex + 1
-                    }.`
-                );
-
-            }
-
-            // ========================================
-            // FINANCIAL VALIDATION
-            // ========================================
-
-            if (
-                criterion.type === "cost"
-            ) {
-
-                if (
-                    value <= 0
-                ) {
-
-                    throw new Error(
-                        `"${criterion.name}" must be greater than ₦0 for Alternative ${
-                            alternativeIndex + 1
-                        }.`
-                    );
-
-                }
-
-            }
-
-            // ========================================
-            // NON-FINANCIAL VALIDATION
-            // ========================================
-
-            else {
-
-                if (
-                    value < 1 ||
-                    value > 10
-                ) {
-
-                    throw new Error(
-                        `"${criterion.name}" must be between 1 and 10 for Alternative ${
-                            alternativeIndex + 1
-                        }.`
-                    );
-
-                }
-
-                if (
-                    !Number.isInteger(value)
-                ) {
-
-                    throw new Error(
-                        `"${criterion.name}" must be a whole number from 1 to 10.`
-                    );
-
-                }
-
-            }
-
-            // ========================================
-            // STORE VALUE
-            // ========================================
-
-            decisionMatrix[
-                alternativeIndex
-            ][
-                criterionIndex
-            ] = value;
-
-        }
-    );
-
-    // ========================================
-    // FINAL VALIDATION
-    // ========================================
-
-    decisionMatrix.forEach(
-        (row, alternativeIndex) => {
-
-            if (
-                row.length !==
-                criteria.length
-            ) {
-
-                throw new Error(
-                    `Alternative ${
-                        alternativeIndex + 1
-                    } does not contain ${
-                        criteria.length
-                    } criteria.`
-                );
-
-            }
-
-            row.forEach(
-                (value, criterionIndex) => {
-
-                    if (
-                        value === null ||
-                        value === undefined
-                    ) {
-
-                        throw new Error(
-                            `Missing value for "${
-                                criteria[
-                                    criterionIndex
-                                ].name
-                            }" in Alternative ${
-                                alternativeIndex + 1
-                            }.`
-                        );
-
-                    }
-
-                }
+        const criterionIndex =
+            Number(
+                input.dataset.criterionIndex
             );
 
+        const alternativeIndex =
+            Number(
+                input.dataset.alternativeIndex
+            );
+
+        const criterion =
+            criteria[criterionIndex];
+
+        const value =
+            Number(input.value);
+
+        if (input.value === "") {
+
+            throw new Error(
+                `Please enter a value for "${criterion.name}" in Alternative ${
+                    alternativeIndex + 1
+                }.`
+            );
         }
-    );
 
-    console.log(
-        "FINAL 19-CRITERION DECISION MATRIX:",
-        decisionMatrix
-    );
+        if (!Number.isFinite(value)) {
 
-    return decisionMatrix;
+            throw new Error(
+                `Invalid value for "${criterion.name}" in Alternative ${
+                    alternativeIndex + 1
+                }.`
+            );
+        }
 
+        if (criterion.type === "cost") {
+
+            if (value <= 0) {
+
+                throw new Error(
+                    `"${criterion.name}" must be greater than 0.`
+                );
+            }
+
+        } else {
+
+            if (
+                value < 1 ||
+                value > 10
+            ) {
+
+                throw new Error(
+                    `"${criterion.name}" must be between 1 and 10.`
+                );
+            }
+        }
+
+        matrix[alternativeIndex][criterionIndex] =
+            value;
+    });
+
+    return matrix;
 }
 
 // ========================================
-// GET CRITERIA TYPES
-// ========================================
-
-function getCriteriaTypes() {
-
-    return criteria.map(
-        (criterion) =>
-            criterion.type
-    );
-
-}
-
-// ========================================
-// RUN DSS ANALYSIS
+// RUN ANALYSIS
 // ========================================
 
 async function runAnalysis() {
 
     try {
 
-        // ========================================
-        // DISABLE BUTTON
-        // ========================================
-
-        runAnalysisBtn.disabled =
-            true;
+        runAnalysisBtn.disabled = true;
 
         statusMessage.textContent =
-            "Running decision analysis...";
-
-        // ========================================
-        // GET ALTERNATIVES
-        // ========================================
+            "Running AHP-TOPSIS analysis...";
 
         const currentAlternatives =
-            getAlternativeNames();
+            getAlternatives();
 
-        // ========================================
-        // GET MATRIX
-        // ========================================
+        if (
+            currentAlternatives.some(
+                name => !name
+            )
+        ) {
+
+            throw new Error(
+                "Please enter all three alternative names."
+            );
+        }
+
+        if (
+            new Set(
+                currentAlternatives.map(
+                    name => name.toLowerCase()
+                )
+            ).size !== 3
+        ) {
+
+            throw new Error(
+                "Alternative names must be unique."
+            );
+        }
 
         const decisionMatrix =
             getDecisionMatrix();
 
-        // ========================================
-        // GET CRITERIA TYPES
-        // ========================================
-
-        const criteriaTypes =
-            getCriteriaTypes();
-
-        // ========================================
-        // DEBUG
-        // ========================================
-
         console.log(
-            "Alternatives:",
-            currentAlternatives
-        );
-
-        console.log(
-            "Alternatives count:",
-            currentAlternatives.length
-        );
-
-        console.log(
-            "Criteria count:",
-            criteria.length
-        );
-
-        console.log(
-            "Criteria types:",
-            criteriaTypes
-        );
-
-        console.log(
-            "Decision matrix:",
+            "22-criterion decision matrix:",
             decisionMatrix
         );
-
-        console.log(
-            "Decision matrix rows:",
-            decisionMatrix.length
-        );
-
-        console.log(
-            "Decision matrix columns:",
-            decisionMatrix[0].length
-        );
-
-        // ========================================
-        // SEND TO BACKEND
-        // ========================================
 
         const response =
             await fetch(
                 `${API_BASE_URL}/api/dss/run`,
                 {
-
                     method: "POST",
 
                     headers: {
@@ -817,24 +499,19 @@ async function runAnalysis() {
                             "application/json"
                     },
 
-                    body:
-                        JSON.stringify({
+                    body: JSON.stringify({
+                        decisionMatrix,
+                        alternatives:
+                            currentAlternatives,
 
-                            decisionMatrix,
-
-                            alternatives:
-                                currentAlternatives,
-
-                            criteriaTypes
-
-                        })
-
+                        criteriaTypes:
+                            criteria.map(
+                                criterion =>
+                                    criterion.type
+                            )
+                    })
                 }
             );
-
-        // ========================================
-        // READ RESPONSE
-        // ========================================
 
         let data;
 
@@ -843,16 +520,11 @@ async function runAnalysis() {
             data =
                 await response.json();
 
-        }
-
-        catch {
+        } catch {
 
             throw new Error(
-                `Server returned an invalid response (${
-                    response.status
-                }).`
+                `Server returned an invalid response (${response.status}).`
             );
-
         }
 
         console.log(
@@ -860,75 +532,36 @@ async function runAnalysis() {
             data
         );
 
-        // ========================================
-        // SERVER ERROR
-        // ========================================
-
-        if (
-            !response.ok
-        ) {
+        if (!response.ok) {
 
             throw new Error(
-
                 data.message ||
                 data.error ||
-                `Server error: ${
-                    response.status
-                }`
-
+                `Server error: ${response.status}`
             );
-
         }
 
-        // ========================================
-        // DSS ERROR
-        // ========================================
-
-        if (
-            !data.success
-        ) {
+        if (!data.success) {
 
             throw new Error(
-
                 data.message ||
                 data.error ||
                 "DSS analysis failed."
-
             );
-
         }
 
-        // ========================================
-        // SAVE RESULT
-        // ========================================
-
         sessionStorage.setItem(
-
             "dssResult",
-
-            JSON.stringify(
-                data.result
-            )
-
+            JSON.stringify(data.result)
         );
-
-        // ========================================
-        // SUCCESS
-        // ========================================
 
         statusMessage.textContent =
             "Analysis completed successfully. Redirecting...";
 
-        // ========================================
-        // DASHBOARD
-        // ========================================
-
         window.location.href =
             "./dashboard.html";
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "DSS Analysis Error:",
@@ -941,9 +574,7 @@ async function runAnalysis() {
 
         runAnalysisBtn.disabled =
             false;
-
     }
-
 }
 
 // ========================================
@@ -957,43 +588,32 @@ function resetAnalysis() {
             ".score-input"
         );
 
-    inputs.forEach(
-        (input) => {
-
-            input.value = "";
-
-        }
-    );
+    inputs.forEach(input => {
+        input.value = "";
+    });
 
     statusMessage.textContent =
         "All scores have been cleared.";
-
 }
 
 // ========================================
-// BUTTON EVENTS
+// BUTTONS
 // ========================================
 
-if (
-    runAnalysisBtn
-) {
+if (runAnalysisBtn) {
 
     runAnalysisBtn.addEventListener(
         "click",
         runAnalysis
     );
-
 }
 
-if (
-    resetAnalysisBtn
-) {
+if (resetAnalysisBtn) {
 
     resetAnalysisBtn.addEventListener(
         "click",
         resetAnalysis
     );
-
 }
 
 // ========================================

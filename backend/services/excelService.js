@@ -10,10 +10,10 @@ const ExcelJS = require("exceljs");
 // ========================================
 
 const DEFAULT_WORKBOOK = path.join(
-  __dirname,
-  "..",
-  "data",
-  "EngineerAI_AHP_TOPSIS_Chatbot_UPDATED_19CRITERIA_FINAL.xlsx"
+    __dirname,
+    "..",
+    "data",
+    "EngineerAI_AHP_TOPSIS_Chatbot_UPDATED_22CRITERIA_FINAL.xlsx"
 );
 
 const DEFAULT_LIBREOFFICE = "soffice";
@@ -22,145 +22,145 @@ const INPUT_SHEET = "CHATBOT_INPUT";
 const OUTPUT_SHEET = "CHATBOT_OUTPUT";
 
 // ========================================
-// 19-CRITERION MODEL
+// 22 CRITERIA
 // ========================================
 
 const CRITERIA = [
 
-  // ========================================
-  // TECHNICAL - 5
-  // ========================================
+    // ========================================
+    // TECHNICAL - 5
+    // ========================================
 
-  {
-    category: "Technical",
-    name: "Laboratory Facilities",
-    type: "benefit"
-  },
+    {
+        category: "Technical",
+        name: "Laboratory Facilities",
+        type: "benefit"
+    },
+    {
+        category: "Technical",
+        name: "Process Equipment",
+        type: "benefit"
+    },
+    {
+        category: "Technical",
+        name: "Engineering Software",
+        type: "benefit"
+    },
+    {
+        category: "Technical",
+        name: "Technical Manpower",
+        type: "benefit"
+    },
+    {
+        category: "Technical",
+        name: "Process Optimization Capability",
+        type: "benefit"
+    },
 
-  {
-    category: "Technical",
-    name: "Process Equipment",
-    type: "benefit"
-  },
+    // ========================================
+    // OPERATIONAL - 3
+    // ========================================
 
-  {
-    category: "Technical",
-    name: "Engineering Software",
-    type: "benefit"
-  },
+    {
+        category: "Operational",
+        name: "Infrastructure Availability",
+        type: "benefit"
+    },
+    {
+        category: "Operational",
+        name: "Maintenance Systems",
+        type: "benefit"
+    },
+    {
+        category: "Operational",
+        name: "Industrial Utilities",
+        type: "benefit"
+    },
 
-  {
-    category: "Technical",
-    name: "Technical Manpower",
-    type: "benefit"
-  },
+    // ========================================
+    // ENVIRONMENTAL & SAFETY - 4
+    // ========================================
 
-  {
-    category: "Technical",
-    name: "Process Optimization Capability",
-    type: "benefit"
-  },
+    {
+        category: "Environmental & Safety",
+        name: "Environmental Compliance",
+        type: "benefit"
+    },
+    {
+        category: "Environmental & Safety",
+        name: "Waste Management Capability",
+        type: "benefit"
+    },
+    {
+        category: "Environmental & Safety",
+        name: "HAZOP/HAZID Capability",
+        type: "benefit"
+    },
+    {
+        category: "Environmental & Safety",
+        name: "Safety Management Systems",
+        type: "benefit"
+    },
 
-  // ========================================
-  // OPERATIONAL - 3
-  // ========================================
+    // ========================================
+    // FINANCIAL - 4
+    // ========================================
 
-  {
-    category: "Operational",
-    name: "Infrastructure Availability",
-    type: "benefit"
-  },
+    {
+        category: "Financial",
+        name: "Equipment Cost",
+        type: "cost"
+    },
+    {
+        category: "Financial",
+        name: "Setup Cost",
+        type: "cost"
+    },
+    {
+        category: "Financial",
+        name: "Operating Cost",
+        type: "cost"
+    },
+    {
+        category: "Financial",
+        name: "Maintenance Cost",
+        type: "cost"
+    },
 
-  {
-    category: "Operational",
-    name: "Maintenance Systems",
-    type: "benefit"
-  },
+    // ========================================
+    // REGULATORY - 6
+    // ========================================
 
-  {
-    category: "Operational",
-    name: "Industrial Utilities",
-    type: "benefit"
-  },
-
-  // ========================================
-  // ENVIRONMENTAL & SAFETY - 4
-  // ========================================
-
-  {
-    category: "Environmental & Safety",
-    name: "Environmental Compliance",
-    type: "benefit"
-  },
-
-  {
-    category: "Environmental & Safety",
-    name: "Waste Management Capability",
-    type: "benefit"
-  },
-
-  {
-    category: "Environmental & Safety",
-    name: "HAZOP/HAZID Capability",
-    type: "benefit"
-  },
-
-  {
-    category: "Environmental & Safety",
-    name: "Safety Management Systems",
-    type: "benefit"
-  },
-
-  // ========================================
-  // FINANCIAL - 4
-  // ========================================
-
-  {
-    category: "Financial",
-    name: "Equipment Cost",
-    type: "cost"
-  },
-
-  {
-    category: "Financial",
-    name: "Setup Cost",
-    type: "cost"
-  },
-
-  {
-    category: "Financial",
-    name: "Operating Cost",
-    type: "cost"
-  },
-
-  {
-    category: "Financial",
-    name: "Maintenance Cost",
-    type: "cost"
-  },
-
-  // ========================================
-  // REGULATORY - 3
-  // ========================================
-
-  {
-    category: "Regulatory",
-    name: "NUPRC Compliance",
-    type: "benefit"
-  },
-
-  {
-    category: "Regulatory",
-    name: "Laboratory Certification",
-    type: "benefit"
-  },
-
-  {
-    category: "Regulatory",
-    name: "Environmental Permits",
-    type: "benefit"
-  }
-
+    {
+        category: "Regulatory",
+        name: "NUPRC Compliance",
+        type: "benefit"
+    },
+    {
+        category: "Regulatory",
+        name: "NMDPRA Compliance",
+        type: "benefit"
+    },
+    {
+        category: "Regulatory",
+        name: "NCDMB Compliance",
+        type: "benefit"
+    },
+    {
+        category: "Regulatory",
+        name: "NOSDRA Compliance",
+        type: "benefit"
+    },
+    {
+        category: "Regulatory",
+        name: "Laboratory Certification",
+        type: "benefit"
+    },
+    {
+        category: "Regulatory",
+        name: "Environmental Permits",
+        type: "benefit"
+    }
 ];
 
 // ========================================
@@ -168,64 +168,51 @@ const CRITERIA = [
 // ========================================
 
 const OUTPUT_ROWS = {
+    alternativeACi: 2,
+    alternativeBCi: 3,
+    alternativeCCi: 4,
 
-  alternativeACi: 2,
-  alternativeBCi: 3,
-  alternativeCCi: 4,
+    bestAlternative: 5,
 
-  bestAlternative: 5,
+    rank1: 6,
+    rank2: 7,
+    rank3: 8,
 
-  rank1: 6,
-  rank2: 7,
-  rank3: 8,
+    alternativeARank: 9,
+    alternativeBRank: 10,
+    alternativeCRank: 11,
 
-  alternativeARank: 9,
-  alternativeBRank: 10,
-  alternativeCRank: 11,
+    alternativeASPlus: 12,
+    alternativeASMinus: 13,
 
-  alternativeASPlus: 12,
-  alternativeASMinus: 13,
+    alternativeBSPlus: 14,
+    alternativeBSMinus: 15,
 
-  alternativeBSPlus: 14,
-  alternativeBSMinus: 15,
+    alternativeCSPlus: 16,
+    alternativeCSMinus: 17,
 
-  alternativeCSPlus: 16,
-  alternativeCSMinus: 17,
+    consistencyRatio: 18,
+    consistencyStatus: 19,
 
-  consistencyRatio: 18,
-  consistencyStatus: 19,
-
-  technicalWeight: 20,
-  operationalWeight: 21,
-  environmentalWeight: 22,
-  financialWeight: 23,
-  regulatoryWeight: 24
-
+    technicalWeight: 20,
+    operationalWeight: 21,
+    environmentalWeight: 22,
+    financialWeight: 23,
+    regulatoryWeight: 24
 };
 
 // ========================================
-// GET WORKBOOK PATH
+// PATH HELPERS
 // ========================================
 
 function getWorkbookPath() {
-
-  return process.env.EXCEL_WORKBOOK_PATH
-    ? path.resolve(process.env.EXCEL_WORKBOOK_PATH)
-    : DEFAULT_WORKBOOK;
-
+    return process.env.EXCEL_WORKBOOK_PATH
+        ? path.resolve(process.env.EXCEL_WORKBOOK_PATH)
+        : DEFAULT_WORKBOOK;
 }
 
-// ========================================
-// GET LIBREOFFICE PATH
-// ========================================
-
 function getLibreOfficePath() {
-
-  return (
-    process.env.LIBREOFFICE_PATH ||
-    DEFAULT_LIBREOFFICE
-  );
-
+    return process.env.LIBREOFFICE_PATH || DEFAULT_LIBREOFFICE;
 }
 
 // ========================================
@@ -233,318 +220,180 @@ function getLibreOfficePath() {
 // ========================================
 
 function runCommand(command, args) {
+    return new Promise((resolve, reject) => {
 
-  return new Promise((resolve, reject) => {
-
-    const child = spawn(
-      command,
-      args,
-      {
-        windowsHide: true,
-        stdio: [
-          "ignore",
-          "pipe",
-          "pipe"
-        ]
-      }
-    );
-
-    let stdout = "";
-    let stderr = "";
-
-    child.stdout.on(
-      "data",
-      (chunk) => {
-        stdout += chunk.toString();
-      }
-    );
-
-    child.stderr.on(
-      "data",
-      (chunk) => {
-        stderr += chunk.toString();
-      }
-    );
-
-    child.on(
-      "error",
-      reject
-    );
-
-    child.on(
-      "close",
-      (code) => {
-
-        if (code !== 0) {
-
-          reject(
-            new Error(
-              `LibreOffice failed with code ${code}.\n${
-                stderr || stdout
-              }`
-            )
-          );
-
-          return;
-        }
-
-        resolve({
-          stdout,
-          stderr
+        const child = spawn(command, args, {
+            windowsHide: true,
+            stdio: ["ignore", "pipe", "pipe"]
         });
 
-      }
-    );
+        let stdout = "";
+        let stderr = "";
 
-  });
+        child.stdout.on("data", chunk => {
+            stdout += chunk.toString();
+        });
 
+        child.stderr.on("data", chunk => {
+            stderr += chunk.toString();
+        });
+
+        child.on("error", reject);
+
+        child.on("close", code => {
+
+            if (code !== 0) {
+                reject(
+                    new Error(
+                        `LibreOffice failed with code ${code}.\n${
+                            stderr || stdout
+                        }`
+                    )
+                );
+                return;
+            }
+
+            resolve({ stdout, stderr });
+        });
+    });
 }
 
 // ========================================
-// NUMBER HELPER
+// VALUE HELPERS
 // ========================================
 
 function numberOrNull(value) {
 
-  if (
-    value === null ||
-    value === undefined ||
-    value === ""
-  ) {
-    return null;
-  }
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return null;
+    }
 
-  if (
-    typeof value === "object" &&
-    value !== null &&
-    Object.prototype.hasOwnProperty.call(
-      value,
-      "result"
-    )
-  ) {
-    value = value.result;
-  }
+    if (
+        typeof value === "object" &&
+        value !== null &&
+        Object.prototype.hasOwnProperty.call(value, "result")
+    ) {
+        value = value.result;
+    }
 
-  const number = Number(value);
+    const number = Number(value);
 
-  return Number.isFinite(number)
-    ? number
-    : null;
-
+    return Number.isFinite(number) ? number : null;
 }
-
-// ========================================
-// TEXT HELPER
-// ========================================
 
 function textOrEmpty(value) {
 
-  if (
-    value === null ||
-    value === undefined
-  ) {
-    return "";
-  }
-
-  if (typeof value === "object") {
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        value,
-        "result"
-      )
-    ) {
-      return textOrEmpty(
-        value.result
-      );
+    if (value === null || value === undefined) {
+        return "";
     }
 
-    if (
-      Object.prototype.hasOwnProperty.call(
-        value,
-        "text"
-      )
-    ) {
-      return textOrEmpty(
-        value.text
-      );
+    if (typeof value === "object") {
+
+        if (Object.prototype.hasOwnProperty.call(value, "result")) {
+            return textOrEmpty(value.result);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(value, "text")) {
+            return textOrEmpty(value.text);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(value, "value")) {
+            return textOrEmpty(value.value);
+        }
+
+        return "";
     }
 
-    if (
-      Object.prototype.hasOwnProperty.call(
-        value,
-        "value"
-      )
-    ) {
-      return textOrEmpty(
-        value.value
-      );
-    }
-
-    return "";
-
-  }
-
-  return String(value).trim();
-
+    return String(value).trim();
 }
 
 // ========================================
 // VALIDATE REQUEST
 // ========================================
 
-function validateRequest({
-  decisionMatrix,
-  alternatives
-}) {
+function validateRequest({ decisionMatrix, alternatives }) {
 
-  if (!Array.isArray(decisionMatrix)) {
+    if (!Array.isArray(decisionMatrix)) {
+        throw new Error("Decision matrix is required.");
+    }
 
-    throw new Error(
-      "Decision matrix is required."
-    );
+    if (decisionMatrix.length !== 3) {
+        throw new Error("Exactly 3 alternatives are required.");
+    }
 
-  }
+    decisionMatrix.forEach((row, rowIndex) => {
 
-  if (decisionMatrix.length !== 3) {
-
-    throw new Error(
-      "Exactly 3 alternatives are required."
-    );
-
-  }
-
-  decisionMatrix.forEach(
-    (row, rowIndex) => {
-
-      if (
-        !Array.isArray(row) ||
-        row.length !== CRITERIA.length
-      ) {
-
-        throw new Error(
-          `Alternative ${
-            rowIndex + 1
-          } must contain exactly ${
-            CRITERIA.length
-          } criteria.`
-        );
-
-      }
-
-      row.forEach(
-        (value, criterionIndex) => {
-
-          const number = Number(value);
-
-          const criterion =
-            CRITERIA[criterionIndex];
-
-          if (!Number.isFinite(number)) {
-
+        if (
+            !Array.isArray(row) ||
+            row.length !== CRITERIA.length
+        ) {
             throw new Error(
-              `Invalid value for "${
-                criterion.name
-              }" in alternative ${
-                rowIndex + 1
-              }.`
+                `Alternative ${rowIndex + 1} must contain exactly ${CRITERIA.length} criteria.`
             );
-
-          }
-
-          // Financial criteria:
-          // actual monetary amounts
-          if (
-            criterion.type === "cost"
-          ) {
-
-            if (number <= 0) {
-
-              throw new Error(
-                `"${criterion.name}" for alternative ${
-                  rowIndex + 1
-                } must be greater than 0.`
-              );
-
-            }
-
-          }
-
-          // Non-financial criteria:
-          // 1 - 10
-          else {
-
-            if (
-              number < 1 ||
-              number > 10
-            ) {
-
-              throw new Error(
-                `"${criterion.name}" for alternative ${
-                  rowIndex + 1
-                } must be between 1 and 10.`
-              );
-
-            }
-
-          }
-
         }
-      );
 
+        row.forEach((value, criterionIndex) => {
+
+            const number = Number(value);
+            const criterion = CRITERIA[criterionIndex];
+
+            if (!Number.isFinite(number)) {
+                throw new Error(
+                    `Invalid value for "${criterion.name}" in alternative ${rowIndex + 1}.`
+                );
+            }
+
+            if (criterion.type === "cost") {
+
+                if (number <= 0) {
+                    throw new Error(
+                        `"${criterion.name}" for alternative ${rowIndex + 1} must be greater than 0.`
+                    );
+                }
+
+            } else {
+
+                if (number < 1 || number > 10) {
+                    throw new Error(
+                        `"${criterion.name}" for alternative ${rowIndex + 1} must be between 1 and 10.`
+                    );
+                }
+            }
+        });
+    });
+
+    if (
+        !Array.isArray(alternatives) ||
+        alternatives.length !== 3
+    ) {
+        throw new Error("Exactly 3 alternative names are required.");
     }
-  );
 
-  // ========================================
-  // ALTERNATIVES
-  // ========================================
+    alternatives.forEach((name, index) => {
 
-  if (
-    !Array.isArray(alternatives) ||
-    alternatives.length !== 3
-  ) {
+        if (
+            typeof name !== "string" ||
+            !name.trim()
+        ) {
+            throw new Error(
+                `Alternative ${index + 1} name is required.`
+            );
+        }
+    });
 
-    throw new Error(
-      "Exactly 3 alternative names are required."
+    const names = alternatives.map(
+        name => name.trim().toLowerCase()
     );
 
-  }
-
-  alternatives.forEach(
-    (name, index) => {
-
-      if (
-        typeof name !== "string" ||
-        !name.trim()
-      ) {
-
+    if (new Set(names).size !== 3) {
         throw new Error(
-          `Alternative ${
-            index + 1
-          } name is required.`
+            "Alternative names must be unique."
         );
-
-      }
-
     }
-  );
-
-  const normalizedNames =
-    alternatives.map(
-      (name) =>
-        name.trim().toLowerCase()
-    );
-
-  if (
-    new Set(normalizedNames).size !== 3
-  ) {
-
-    throw new Error(
-      "Alternative names must be unique."
-    );
-
-  }
-
 }
 
 // ========================================
@@ -552,178 +401,122 @@ function validateRequest({
 // ========================================
 
 async function writeInputs(
-  workbookPath,
-  tempWorkbookPath,
-  decisionMatrix,
-  alternatives
+    workbookPath,
+    tempWorkbookPath,
+    decisionMatrix,
+    alternatives
 ) {
 
-  const workbook =
-    new ExcelJS.Workbook();
+    const workbook = new ExcelJS.Workbook();
 
-  await workbook.xlsx.readFile(
-    workbookPath
-  );
+    await workbook.xlsx.readFile(workbookPath);
 
-  const sheet =
-    workbook.getWorksheet(
-      INPUT_SHEET
-    );
+    const sheet = workbook.getWorksheet(INPUT_SHEET);
 
-  if (!sheet) {
-
-    throw new Error(
-      `Workbook is missing the ${
-        INPUT_SHEET
-      } sheet.`
-    );
-
-  }
-
-  // ========================================
-  // ALTERNATIVE NAMES
-  // C1, D1, E1
-  // ========================================
-
-  sheet.getCell(1, 3).value =
-    alternatives[0].trim();
-
-  sheet.getCell(1, 4).value =
-    alternatives[1].trim();
-
-  sheet.getCell(1, 5).value =
-    alternatives[2].trim();
-
-  // ========================================
-  // DECISION MATRIX
-  //
-  // C2:E20
-  //
-  // 19 criteria
-  // 3 alternatives
-  // ========================================
-
-  for (
-    let alternativeIndex = 0;
-    alternativeIndex < 3;
-    alternativeIndex++
-  ) {
-
-    for (
-      let criterionIndex = 0;
-      criterionIndex < CRITERIA.length;
-      criterionIndex++
-    ) {
-
-      const cell =
-        sheet.getCell(
-          criterionIndex + 2,
-          alternativeIndex + 3
+    if (!sheet) {
+        throw new Error(
+            `Workbook is missing the ${INPUT_SHEET} sheet.`
         );
-
-      cell.value =
-        Number(
-          decisionMatrix[
-            alternativeIndex
-          ][
-            criterionIndex
-          ]
-        );
-
     }
 
-  }
+    // Alternative names: C1:E1
 
-  await workbook.xlsx.writeFile(
-    tempWorkbookPath
-  );
+    sheet.getCell(1, 3).value = alternatives[0].trim();
+    sheet.getCell(1, 4).value = alternatives[1].trim();
+    sheet.getCell(1, 5).value = alternatives[2].trim();
 
+    // Decision matrix: C2:E23
+
+    for (let alternativeIndex = 0; alternativeIndex < 3; alternativeIndex++) {
+
+        for (
+            let criterionIndex = 0;
+            criterionIndex < CRITERIA.length;
+            criterionIndex++
+        ) {
+
+            const cell = sheet.getCell(
+                criterionIndex + 2,
+                alternativeIndex + 3
+            );
+
+            cell.value = Number(
+                decisionMatrix[alternativeIndex][criterionIndex]
+            );
+        }
+    }
+
+    await workbook.xlsx.writeFile(tempWorkbookPath);
 }
 
 // ========================================
-// RECALCULATE EXCEL
+// RECALCULATE WITH LIBREOFFICE
 // ========================================
 
 async function recalculateWorkbook(
-  inputWorkbookPath,
-  outputDirectory
+    inputWorkbookPath,
+    outputDirectory
 ) {
 
-  await fs.mkdir(
-    outputDirectory,
-    {
-      recursive: true
-    }
-  );
+    await fs.mkdir(outputDirectory, {
+        recursive: true
+    });
 
-  const profileDirectory =
-    path.join(
-      outputDirectory,
-      "lo-profile"
+    const profileDirectory = path.join(
+        outputDirectory,
+        "lo-profile"
     );
 
-  await fs.mkdir(
-    profileDirectory,
-    {
-      recursive: true
-    }
-  );
+    await fs.mkdir(profileDirectory, {
+        recursive: true
+    });
 
-  const userInstallation =
-    `-env:UserInstallation=file:///${profileDirectory.replace(
-      /\\/g,
-      "/"
-    )}`;
+    const userInstallation =
+        `-env:UserInstallation=file:///${profileDirectory.replace(
+            /\\/g,
+            "/"
+        )}`;
 
-  const outputDirectoryForLibreOffice =
-    path.join(
-      outputDirectory,
-      "recalculated"
+    const outputDirectoryForLibreOffice = path.join(
+        outputDirectory,
+        "recalculated"
     );
 
-  await fs.mkdir(
-    outputDirectoryForLibreOffice,
-    {
-      recursive: true
-    }
-  );
+    await fs.mkdir(outputDirectoryForLibreOffice, {
+        recursive: true
+    });
 
-  const libreOfficeInput =
-    path.join(
-      outputDirectory,
-      "ExcelCalculationInput.xlsx"
+    const libreOfficeInput = path.join(
+        outputDirectory,
+        "ExcelCalculationInput.xlsx"
     );
 
-  await fs.copyFile(
-    inputWorkbookPath,
-    libreOfficeInput
-  );
-
-  await runCommand(
-    getLibreOfficePath(),
-    [
-      "--headless",
-      userInstallation,
-      "--convert-to",
-      "xlsx",
-      "--outdir",
-      outputDirectoryForLibreOffice,
-      libreOfficeInput
-    ]
-  );
-
-  const outputWorkbookPath =
-    path.join(
-      outputDirectoryForLibreOffice,
-      "ExcelCalculationInput.xlsx"
+    await fs.copyFile(
+        inputWorkbookPath,
+        libreOfficeInput
     );
 
-  await fs.access(
-    outputWorkbookPath
-  );
+    await runCommand(
+        getLibreOfficePath(),
+        [
+            "--headless",
+            userInstallation,
+            "--convert-to",
+            "xlsx",
+            "--outdir",
+            outputDirectoryForLibreOffice,
+            libreOfficeInput
+        ]
+    );
 
-  return outputWorkbookPath;
+    const outputWorkbookPath = path.join(
+        outputDirectoryForLibreOffice,
+        "ExcelCalculationInput.xlsx"
+    );
 
+    await fs.access(outputWorkbookPath);
+
+    return outputWorkbookPath;
 }
 
 // ========================================
@@ -731,302 +524,179 @@ async function recalculateWorkbook(
 // ========================================
 
 async function readOutputs(
-  recalculatedWorkbookPath,
-  alternatives
+    recalculatedWorkbookPath,
+    alternatives
 ) {
 
-  const workbook =
-    new ExcelJS.Workbook();
+    const workbook = new ExcelJS.Workbook();
 
-  await workbook.xlsx.load(
-    await fs.readFile(
-      recalculatedWorkbookPath
-    )
-  );
-
-  const sheet =
-    workbook.getWorksheet(
-      OUTPUT_SHEET
+    await workbook.xlsx.load(
+        await fs.readFile(recalculatedWorkbookPath)
     );
 
-  if (!sheet) {
+    const sheet = workbook.getWorksheet(OUTPUT_SHEET);
 
-    throw new Error(
-      `Workbook is missing the ${
-        OUTPUT_SHEET
-      } sheet.`
-    );
-
-  }
-
-  const value = (row) =>
-    sheet.getCell(
-      row,
-      2
-    ).value;
-
-  // ========================================
-  // RANKING
-  // ========================================
-
-  const ranking = [
-
-    {
-      alternative:
-        alternatives[0],
-
-      excelAlternative:
-        textOrEmpty(
-          value(
-            OUTPUT_ROWS
-              .alternativeARank
-          )
-        ),
-
-      rank:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeARank
-          )
-        ),
-
-      closenessCoefficient:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeACi
-          )
-        ),
-
-      positiveDistance:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeASPlus
-          )
-        ),
-
-      negativeDistance:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeASMinus
-          )
-        )
-    },
-
-    {
-      alternative:
-        alternatives[1],
-
-      excelAlternative:
-        textOrEmpty(
-          value(
-            OUTPUT_ROWS
-              .alternativeBRank
-          )
-        ),
-
-      rank:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeBRank
-          )
-        ),
-
-      closenessCoefficient:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeBCi
-          )
-        ),
-
-      positiveDistance:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeBSPlus
-          )
-        ),
-
-      negativeDistance:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeBSMinus
-          )
-        )
-    },
-
-    {
-      alternative:
-        alternatives[2],
-
-      excelAlternative:
-        textOrEmpty(
-          value(
-            OUTPUT_ROWS
-              .alternativeCRank
-          )
-        ),
-
-      rank:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeCRank
-          )
-        ),
-
-      closenessCoefficient:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeCCi
-          )
-        ),
-
-      positiveDistance:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeCSPlus
-          )
-        ),
-
-      negativeDistance:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .alternativeCSMinus
-          )
-        )
+    if (!sheet) {
+        throw new Error(
+            `Workbook is missing the ${OUTPUT_SHEET} sheet.`
+        );
     }
 
-  ];
+    const value = row =>
+        sheet.getCell(row, 2).value;
 
-  ranking.sort(
-    (a, b) =>
-      (a.rank ?? 999) -
-      (b.rank ?? 999)
-  );
+    const ranking = [
 
-  // ========================================
-  // CONSISTENCY
-  // ========================================
+        {
+            alternative: alternatives[0],
 
-  const consistencyStatus =
-    textOrEmpty(
-      value(
-        OUTPUT_ROWS
-          .consistencyStatus
-      )
+            excelAlternative: textOrEmpty(
+                value(OUTPUT_ROWS.alternativeARank)
+            ),
+
+            rank: numberOrNull(
+                value(OUTPUT_ROWS.alternativeARank)
+            ),
+
+            closenessCoefficient: numberOrNull(
+                value(OUTPUT_ROWS.alternativeACi)
+            ),
+
+            positiveDistance: numberOrNull(
+                value(OUTPUT_ROWS.alternativeASPlus)
+            ),
+
+            negativeDistance: numberOrNull(
+                value(OUTPUT_ROWS.alternativeASMinus)
+            )
+        },
+
+        {
+            alternative: alternatives[1],
+
+            excelAlternative: textOrEmpty(
+                value(OUTPUT_ROWS.alternativeBRank)
+            ),
+
+            rank: numberOrNull(
+                value(OUTPUT_ROWS.alternativeBRank)
+            ),
+
+            closenessCoefficient: numberOrNull(
+                value(OUTPUT_ROWS.alternativeBCi)
+            ),
+
+            positiveDistance: numberOrNull(
+                value(OUTPUT_ROWS.alternativeBSPlus)
+            ),
+
+            negativeDistance: numberOrNull(
+                value(OUTPUT_ROWS.alternativeBSMinus)
+            )
+        },
+
+        {
+            alternative: alternatives[2],
+
+            excelAlternative: textOrEmpty(
+                value(OUTPUT_ROWS.alternativeCRank)
+            ),
+
+            rank: numberOrNull(
+                value(OUTPUT_ROWS.alternativeCRank)
+            ),
+
+            closenessCoefficient: numberOrNull(
+                value(OUTPUT_ROWS.alternativeCCi)
+            ),
+
+            positiveDistance: numberOrNull(
+                value(OUTPUT_ROWS.alternativeCSPlus)
+            ),
+
+            negativeDistance: numberOrNull(
+                value(OUTPUT_ROWS.alternativeCSMinus)
+            )
+        }
+
+    ];
+
+    ranking.sort(
+        (a, b) =>
+            (a.rank ?? 999) -
+            (b.rank ?? 999)
     );
 
-  // ========================================
-  // RETURN RESULT
-  // ========================================
+    const consistencyStatus = textOrEmpty(
+        value(OUTPUT_ROWS.consistencyStatus)
+    );
 
-  return {
+    return {
 
-    source:
-      "Excel AHP-TOPSIS workbook",
+        source: "Excel AHP-TOPSIS workbook",
 
-    ahp: {
+        ahp: {
 
-      weights: [
+            weights: [
 
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .technicalWeight
-          )
-        ),
+                numberOrNull(
+                    value(OUTPUT_ROWS.technicalWeight)
+                ),
 
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .operationalWeight
-          )
-        ),
+                numberOrNull(
+                    value(OUTPUT_ROWS.operationalWeight)
+                ),
 
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .environmentalWeight
-          )
-        ),
+                numberOrNull(
+                    value(OUTPUT_ROWS.environmentalWeight)
+                ),
 
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .financialWeight
-          )
-        ),
+                numberOrNull(
+                    value(OUTPUT_ROWS.financialWeight)
+                ),
 
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .regulatoryWeight
-          )
-        )
+                numberOrNull(
+                    value(OUTPUT_ROWS.regulatoryWeight)
+                )
 
-      ],
+            ],
 
-      consistencyRatio:
-        numberOrNull(
-          value(
-            OUTPUT_ROWS
-              .consistencyRatio
-          )
-        ),
+            consistencyRatio: numberOrNull(
+                value(OUTPUT_ROWS.consistencyRatio)
+            ),
 
-      consistencyStatus,
+            consistencyStatus,
 
-      consistent:
-        consistencyStatus
-          .toLowerCase() ===
-        "consistent"
+            consistent:
+                consistencyStatus.toLowerCase() ===
+                "consistent"
+        },
 
-    },
+        topsis: {
 
-    topsis: {
+            ranking,
 
-      ranking,
-
-      recommendation:
-        ranking[0]
-          ? {
-
-              alternative:
+            recommendation:
                 ranking[0]
-                  .alternative,
+                    ? {
+                        alternative:
+                            ranking[0].alternative,
 
-              rank:
-                ranking[0].rank,
+                        rank:
+                            ranking[0].rank,
 
-              closenessCoefficient:
-                ranking[0]
-                  .closenessCoefficient,
+                        closenessCoefficient:
+                            ranking[0].closenessCoefficient,
 
-              positiveDistance:
-                ranking[0]
-                  .positiveDistance,
+                        positiveDistance:
+                            ranking[0].positiveDistance,
 
-              negativeDistance:
-                ranking[0]
-                  .negativeDistance
-
-            }
-          : null
-
-    }
-
-  };
-
+                        negativeDistance:
+                            ranking[0].negativeDistance
+                    }
+                    : null
+        }
+    };
 }
 
 // ========================================
@@ -1034,75 +704,60 @@ async function readOutputs(
 // ========================================
 
 async function runExcelDSS({
-  decisionMatrix,
-  alternatives
-}) {
-
-  validateRequest({
     decisionMatrix,
     alternatives
-  });
+}) {
 
-  const templatePath =
-    getWorkbookPath();
+    validateRequest({
+        decisionMatrix,
+        alternatives
+    });
 
-  await fs.access(
-    templatePath
-  );
+    const templatePath = getWorkbookPath();
 
-  const tempDirectory =
-    path.join(
-      os.tmpdir(),
-      `engineer-ai-dss-${crypto.randomUUID()}`
+    await fs.access(templatePath);
+
+    const tempDirectory = path.join(
+        os.tmpdir(),
+        `engineer-ai-dss-${crypto.randomUUID()}`
     );
 
-  await fs.mkdir(
-    tempDirectory,
-    {
-      recursive: true
+    await fs.mkdir(tempDirectory, {
+        recursive: true
+    });
+
+    try {
+
+        const inputWorkbookPath = path.join(
+            tempDirectory,
+            "EngineerAI_Input.xlsx"
+        );
+
+        await writeInputs(
+            templatePath,
+            inputWorkbookPath,
+            decisionMatrix,
+            alternatives
+        );
+
+        const recalculatedWorkbookPath =
+            await recalculateWorkbook(
+                inputWorkbookPath,
+                tempDirectory
+            );
+
+        return await readOutputs(
+            recalculatedWorkbookPath,
+            alternatives
+        );
+
+    } finally {
+
+        await fs.rm(tempDirectory, {
+            recursive: true,
+            force: true
+        });
     }
-  );
-
-  try {
-
-    const inputWorkbookPath =
-      path.join(
-        tempDirectory,
-        "EngineerAI_Input.xlsx"
-      );
-
-    await writeInputs(
-      templatePath,
-      inputWorkbookPath,
-      decisionMatrix,
-      alternatives
-    );
-
-    const recalculatedWorkbookPath =
-      await recalculateWorkbook(
-        inputWorkbookPath,
-        tempDirectory
-      );
-
-    return await readOutputs(
-      recalculatedWorkbookPath,
-      alternatives
-    );
-
-  }
-
-  finally {
-
-    await fs.rm(
-      tempDirectory,
-      {
-        recursive: true,
-        force: true
-      }
-    );
-
-  }
-
 }
 
 // ========================================
@@ -1110,5 +765,5 @@ async function runExcelDSS({
 // ========================================
 
 module.exports = {
-  runExcelDSS
+    runExcelDSS
 };
