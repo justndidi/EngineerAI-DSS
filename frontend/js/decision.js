@@ -176,7 +176,8 @@ const alternatives = [
 // API
 // ========================================
 
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL =
+    "https://engineerai-dss-production.up.railway.app";
 
 // ========================================
 // GENERATE TABLE
