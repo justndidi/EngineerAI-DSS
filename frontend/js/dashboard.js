@@ -32,14 +32,12 @@ const topsisDetails = document.getElementById("topsisDetails");
 
 const criteria = [
   "Technical",
-
   "Operational",
-
   "Environmental & Safety",
-
   "Financial",
-
   "Regulatory",
+  "Commercial Feasibility",
+  "Scale",
 ];
 
 // ========================================
@@ -48,20 +46,20 @@ const criteria = [
 
 function showEmptyState() {
   criteriaWeights.innerHTML = `
-        <div class="empty-state">
-            <strong>No analysis available</strong>
-            Run a decision analysis to view the AHP results.
-        </div>
-    `;
+    <div class="empty-state">
+      <strong>No analysis available</strong>
+      Run a decision analysis to view the AHP results.
+    </div>
+  `;
 
   ahpChart.innerHTML = "";
 
   rankingContainer.innerHTML = `
-        <div class="empty-state">
-            <strong>No ranking available</strong>
-            Run a decision analysis to view the TOPSIS ranking.
-        </div>
-    `;
+    <div class="empty-state">
+      <strong>No ranking available</strong>
+      Run a decision analysis to view the TOPSIS ranking.
+    </div>
+  `;
 
   topsisDetails.innerHTML = "";
 
@@ -84,12 +82,22 @@ async function runDSS() {
 
     runDSSBtn.disabled = true;
 
-    const response = await fetch("https://engineer-ai-dss.vercel.app", {
+    const response = await fetch("http://localhost:5000/api/dss/run", {
       method: "POST",
 
       headers: {
         "Content-Type": "application/json",
       },
+
+      body: JSON.stringify({
+        decisionMatrix: JSON.parse(
+          sessionStorage.getItem("decisionMatrix") || "[]"
+        ),
+
+        alternatives: JSON.parse(
+          sessionStorage.getItem("alternatives") || "[]"
+        ),
+      }),
     });
 
     const data = await response.json();
@@ -98,15 +106,15 @@ async function runDSS() {
 
     if (!response.ok) {
       throw new Error(
-        data.message || data.error || `Server error: ${response.status}`,
+        data.message || data.error || `Server error: ${response.status}`
       );
     }
 
     if (!data.success) {
-      throw new Error(data.message || data.error || "DSS calculation failed.");
+      throw new Error(
+        data.message || data.error || "DSS calculation failed."
+      );
     }
-
-    // Save latest result
 
     sessionStorage.setItem("dssResult", JSON.stringify(data.result));
 
@@ -114,7 +122,8 @@ async function runDSS() {
   } catch (error) {
     console.error("DSS Error:", error);
 
-    analysisStatus.textContent = error.message || "Unable to run analysis.";
+    analysisStatus.textContent =
+      error.message || "Unable to run analysis.";
 
     return null;
   }
@@ -161,43 +170,45 @@ function displayAHP(result) {
 
   criteriaWeights.innerHTML = "";
 
-  ahp.weights.forEach((weight, index) => {
+  const weights = Array.isArray(ahp.weights)
+    ? ahp.weights
+    : [];
+
+  weights.forEach((weight, index) => {
     const percentage = Number(weight) * 100;
+
+    const criterionName =
+      criteria[index] ||
+      ahp.weightDetails?.[index]?.criterion ||
+      `Criterion ${index + 1}`;
 
     const item = document.createElement("div");
 
     item.className = "criterion-item";
 
     item.innerHTML = `
+      <div class="criterion-info">
+        <span>
+          ${criterionName}
+        </span>
 
-                <div class="criterion-info">
+        <strong>
+          ${percentage.toFixed(2)}%
+        </strong>
+      </div>
 
-                    <span>
-                        ${criteria[index]}
-                    </span>
-
-                    <strong>
-                        ${percentage.toFixed(2)}%
-                    </strong>
-
-                </div>
-
-
-                <div class="weight-bar">
-
-                    <div
-                        class="weight-fill"
-                        style="width: ${percentage}%">
-                    </div>
-
-                </div>
-
-            `;
+      <div class="weight-bar">
+        <div
+          class="weight-fill"
+          style="width: ${percentage}%">
+        </div>
+      </div>
+    `;
 
     criteriaWeights.appendChild(item);
   });
 
-  displayAHPChart(ahp.weights);
+  displayAHPChart(weights);
 }
 
 // ========================================
@@ -210,35 +221,32 @@ function displayAHPChart(weights) {
   weights.forEach((weight, index) => {
     const percentage = Number(weight) * 100;
 
+    const criterionName =
+      criteria[index] ||
+      `Criterion ${index + 1}`;
+
     const chartItem = document.createElement("div");
 
     chartItem.className = "chart-item";
 
     chartItem.innerHTML = `
+      <div class="chart-label">
+        <span>
+          ${criterionName}
+        </span>
 
-                <div class="chart-label">
+        <strong>
+          ${percentage.toFixed(2)}%
+        </strong>
+      </div>
 
-                    <span>
-                        ${criteria[index]}
-                    </span>
-
-                    <strong>
-                        ${percentage.toFixed(2)}%
-                    </strong>
-
-                </div>
-
-
-                <div class="chart-bar">
-
-                    <div
-                        class="chart-fill"
-                        style="width: ${percentage}%">
-                    </div>
-
-                </div>
-
-            `;
+      <div class="chart-bar">
+        <div
+          class="chart-fill"
+          style="width: ${percentage}%">
+        </div>
+      </div>
+    `;
 
     ahpChart.appendChild(chartItem);
   });
@@ -249,7 +257,11 @@ function displayAHPChart(weights) {
 // ========================================
 
 function displayTOPSIS(result) {
-  if (!result || !result.topsis || !Array.isArray(result.topsis.ranking)) {
+  if (
+    !result ||
+    !result.topsis ||
+    !Array.isArray(result.topsis.ranking)
+  ) {
     return;
   }
 
@@ -265,31 +277,25 @@ function displayTOPSIS(result) {
     const score = Number(item.closenessCoefficient);
 
     rankingItem.innerHTML = `
+      <div class="rank-number">
+        ${item.rank}
+      </div>
 
-                <div class="rank-number">
-                    ${item.rank}
-                </div>
+      <div class="alternative-info">
+        <h3>
+          ${item.alternative}
+        </h3>
 
+        <p>
+          Closeness Coefficient:
+          ${score.toFixed(4)}
+        </p>
+      </div>
 
-                <div class="alternative-info">
-
-                    <h3>
-                        ${item.alternative}
-                    </h3>
-
-                    <p>
-                        Closeness Coefficient:
-                        ${score.toFixed(4)}
-                    </p>
-
-                </div>
-
-
-                <div class="score">
-                    ${score.toFixed(4)}
-                </div>
-
-            `;
+      <div class="score">
+        ${score.toFixed(4)}
+      </div>
+    `;
 
     rankingContainer.appendChild(rankingItem);
   });
@@ -311,77 +317,63 @@ function displayTOPSISDetails(ranking) {
 
     const score = Number(item.closenessCoefficient);
 
-    const positiveDistance = Number(item.positiveDistance);
+    const positiveDistance = Number(
+      item.positiveDistance
+    );
 
-    const negativeDistance = Number(item.negativeDistance);
+    const negativeDistance = Number(
+      item.negativeDistance
+    );
 
     card.innerHTML = `
+      <div class="detail-header">
+        <div>
+          <span class="detail-rank">
+            Rank ${item.rank}
+          </span>
 
-                <div class="detail-header">
+          <h3>
+            ${item.alternative}
+          </h3>
+        </div>
 
-                    <div>
+        <strong class="detail-score">
+          ${score.toFixed(4)}
+        </strong>
+      </div>
 
-                        <span class="detail-rank">
-                            Rank ${item.rank}
-                        </span>
+      <div class="detail-metrics">
+        <div>
+          <span>
+            Closeness Coefficient
+          </span>
 
-                        <h3>
-                            ${item.alternative}
-                        </h3>
+          <strong>
+            ${score.toFixed(4)}
+          </strong>
+        </div>
 
-                    </div>
+        <div>
+          <span>
+            Distance to Ideal (S+)
+          </span>
 
+          <strong>
+            ${positiveDistance.toFixed(4)}
+          </strong>
+        </div>
 
-                    <strong class="detail-score">
-                        ${score.toFixed(4)}
-                    </strong>
+        <div>
+          <span>
+            Distance to Negative Ideal (S-)
+          </span>
 
-                </div>
-
-
-                <div class="detail-metrics">
-
-                    <div>
-
-                        <span>
-                            Closeness Coefficient
-                        </span>
-
-                        <strong>
-                            ${score.toFixed(4)}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Distance to Ideal (S+)
-                        </span>
-
-                        <strong>
-                            ${positiveDistance.toFixed(4)}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Distance to Negative Ideal (S-)
-                        </span>
-
-                        <strong>
-                            ${negativeDistance.toFixed(4)}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            `;
+          <strong>
+            ${negativeDistance.toFixed(4)}
+          </strong>
+        </div>
+      </div>
+    `;
 
     topsisDetails.appendChild(card);
   });
@@ -392,16 +384,22 @@ function displayTOPSISDetails(ranking) {
 // ========================================
 
 function displayRecommendation(result) {
-  if (!result || !result.topsis || !result.topsis.recommendation) {
+  if (
+    !result ||
+    !result.topsis ||
+    !result.topsis.recommendation
+  ) {
     return;
   }
 
-  const recommendation = result.topsis.recommendation;
+  const recommendation =
+    result.topsis.recommendation;
 
-  recommendationName.textContent = recommendation.alternative;
+  recommendationName.textContent =
+    recommendation.alternative;
 
   recommendationScore.textContent = Number(
-    recommendation.closenessCoefficient,
+    recommendation.closenessCoefficient
   ).toFixed(4);
 }
 
@@ -422,7 +420,8 @@ function displayResult(result) {
 
   displayRecommendation(result);
 
-  analysisStatus.textContent = "Analysis completed successfully ✓";
+  analysisStatus.textContent =
+    "Analysis completed successfully ✓";
 }
 
 // ========================================
@@ -430,12 +429,14 @@ function displayResult(result) {
 // ========================================
 
 function loadSavedResult() {
-  const savedResult = sessionStorage.getItem("dssResult");
+  const savedResult =
+    sessionStorage.getItem("dssResult");
 
   if (!savedResult) {
     showEmptyState();
 
-    analysisStatus.textContent = "No analysis has been run yet.";
+    analysisStatus.textContent =
+      "No analysis has been run yet.";
 
     return;
   }
@@ -443,11 +444,17 @@ function loadSavedResult() {
   try {
     const result = JSON.parse(savedResult);
 
-    console.log("Loaded saved DSS result:", result);
+    console.log(
+      "Loaded saved DSS result:",
+      result
+    );
 
     displayResult(result);
   } catch (error) {
-    console.error("Saved DSS result error:", error);
+    console.error(
+      "Saved DSS result error:",
+      error
+    );
 
     sessionStorage.removeItem("dssResult");
 
@@ -459,19 +466,22 @@ function loadSavedResult() {
 // BUTTON
 // ========================================
 
-runDSSBtn.addEventListener("click", async () => {
-  const result = await runDSS();
+runDSSBtn.addEventListener(
+  "click",
+  async () => {
+    const result = await runDSS();
 
-  if (!result) {
+    if (!result) {
+      runDSSBtn.disabled = false;
+
+      return;
+    }
+
+    displayResult(result);
+
     runDSSBtn.disabled = false;
-
-    return;
   }
-
-  displayResult(result);
-
-  runDSSBtn.disabled = false;
-});
+);
 
 // ========================================
 // INITIALIZE

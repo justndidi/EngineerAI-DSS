@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -10,7 +11,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>EngineerAI - Decision Analysis</title>
+    <title>
+        EngineerAI - Decision Analysis
+    </title>
 
     <link
         rel="stylesheet"
@@ -21,72 +24,36 @@
 
 <body>
 
-    <!-- ========================================
-         NAVBAR
-    ========================================= -->
-
-    <header class="navbar">
-
-        <div class="logo">
-            Engineer<span>AI</span>
-        </div>
-
-        <nav>
-
-            <a href="index.html">
-                Chat
-            </a>
-
-            <a
-                href="decision.html"
-                class="active"
-            >
-                Decision Analysis
-            </a>
-
-            <a href="dashboard.html">
-                Dashboard
-            </a>
-
-        </nav>
-
-    </header>
-
-    <!-- ========================================
-         MAIN
-    ========================================= -->
-
     <main class="decision-page">
 
-        <!-- HEADER -->
-
-        <section class="page-header">
+        <header class="page-header">
 
             <h1>
                 Engineering Decision Analysis
             </h1>
 
             <p>
-                Enter your alternatives and evaluate
-                them using the established AHP-TOPSIS
-                decision model.
+                Evaluate three alternatives using
+                the AHP-TOPSIS decision-support model.
             </p>
 
-        </section>
+        </header>
 
-        <!-- ALTERNATIVES -->
+        <!-- ========================================
+             ALTERNATIVES
+        ========================================= -->
 
         <section class="card">
 
             <div class="card-header">
 
                 <h2>
-                    Decision Alternatives
+                    Alternatives
                 </h2>
 
                 <p>
                     Enter the three alternatives you
-                    want to compare.
+                    want EngineerAI to compare.
                 </p>
 
             </div>
@@ -103,7 +70,7 @@
                         type="text"
                         id="alternative0"
                         class="alternative-input"
-                        placeholder="e.g. Solar Power Plant"
+                        placeholder="e.g. Process Optimization Service Firm"
                         autocomplete="off"
                     >
 
@@ -119,7 +86,7 @@
                         type="text"
                         id="alternative1"
                         class="alternative-input"
-                        placeholder="e.g. Gas Power Plant"
+                        placeholder="e.g. Environmental Compliance Service Firm"
                         autocomplete="off"
                     >
 
@@ -135,7 +102,7 @@
                         type="text"
                         id="alternative2"
                         class="alternative-input"
-                        placeholder="e.g. Hydroelectric Plant"
+                        placeholder="e.g. Laboratory Testing Service Firm"
                         autocomplete="off"
                     >
 
@@ -145,7 +112,9 @@
 
         </section>
 
-        <!-- MODEL INFORMATION -->
+        <!-- ========================================
+             MODEL INFORMATION
+        ========================================= -->
 
         <section class="info-box">
 
@@ -154,51 +123,64 @@
             </strong>
 
             <p>
-                The established AHP criterion weights
-                are stored in the Excel decision model.
-                You do not need to enter the expert
-                AHP questionnaire again for each
-                decision.
+                The model contains 7 major criteria
+                and 19 sub-criteria.
             </p>
 
             <p>
-                The model contains
-                <strong>22 TOPSIS criteria</strong>:
-                5 Technical,
-                3 Operational,
-                4 Environmental &amp; Safety,
-                4 Financial and
-                6 Regulatory.
+                Every decision rating must be a whole
+                number from <strong>1 to 9</strong>.
             </p>
 
             <p>
-                Regulatory criteria include:
-                NUPRC Compliance,
-                NMDPRA Compliance,
-                NCDMB Compliance,
-                NOSDRA Compliance,
-                Laboratory Certification and
-                Environmental Permits.
+                The seven major criteria are:
+                Technical, Operational,
+                Environmental &amp; Safety, Financial,
+                Regulatory, Commercial Feasibility,
+                and Scale.
+            </p>
+
+            <p>
+                Initial Capital Requirement and
+                Operating &amp; Maintenance Burden are
+                cost criteria. All other sub-criteria
+                are benefit criteria.
             </p>
 
         </section>
 
-        <!-- SCORE CARD -->
+        <!-- ========================================
+             DECISION SCORES
+        ========================================= -->
 
         <section class="card">
 
             <div class="card-header">
 
                 <h2>
-                    Decision Scores
+                    Decision Ratings
                 </h2>
 
                 <p>
-                    Rate non-financial criteria from
-                    1 to 10. Enter actual financial
-                    amounts in Nigerian Naira (₦) for
-                    the four financial cost criteria.
+                    Rate every sub-criterion from
+                    1 to 9 for each alternative.
                 </p>
+
+            </div>
+
+            <div class="rating-guide">
+
+                <span>
+                    1 = Very Low
+                </span>
+
+                <span>
+                    5 = Moderate
+                </span>
+
+                <span>
+                    9 = Very High
+                </span>
 
             </div>
 
@@ -215,7 +197,7 @@
                             </th>
 
                             <th>
-                                Criterion
+                                Sub-Criterion
                             </th>
 
                             <th>
@@ -247,7 +229,9 @@
 
         </section>
 
-        <!-- ACTIONS -->
+        <!-- ========================================
+             ACTIONS
+        ========================================= -->
 
         <section class="actions">
 
@@ -256,7 +240,7 @@
                 id="resetAnalysisBtn"
                 class="secondary-btn"
             >
-                Reset Scores
+                Reset Ratings
             </button>
 
             <button
@@ -269,14 +253,19 @@
 
         </section>
 
-        <!-- STATUS -->
+        <!-- ========================================
+             STATUS
+        ========================================= -->
 
         <div
             id="statusMessage"
             class="status-message"
+            aria-live="polite"
         ></div>
 
-        <!-- DISCLAIMER -->
+        <!-- ========================================
+             DISCLAIMER
+        ========================================= -->
 
         <p class="disclaimer">
 
@@ -288,8 +277,6 @@
         </p>
 
     </main>
-
-    <!-- JAVASCRIPT -->
 
     <script src="./js/decision.js"></script>
 

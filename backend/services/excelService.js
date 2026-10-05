@@ -13,7 +13,7 @@ const DEFAULT_WORKBOOK = path.join(
     __dirname,
     "..",
     "data",
-    "EngineerAI_AHP_TOPSIS_Chatbot_UPDATED_22CRITERIA_FINAL.xlsx"
+    "EngineerAI_AHP_TOPSIS_7CRITERIA_19SUBCRITERIA_FINAL.xlsx"
 );
 
 const DEFAULT_LIBREOFFICE = "soffice";
@@ -22,152 +22,161 @@ const INPUT_SHEET = "CHATBOT_INPUT";
 const OUTPUT_SHEET = "CHATBOT_OUTPUT";
 
 // ========================================
-// 22 CRITERIA
+// 19 SUB-CRITERIA
 // ========================================
 
 const CRITERIA = [
 
     // ========================================
-    // TECHNICAL - 5
+    // 1. TECHNICAL - 3
     // ========================================
 
-    {
-        category: "Technical",
-        name: "Laboratory Facilities",
-        type: "benefit"
-    },
-    {
-        category: "Technical",
-        name: "Process Equipment",
-        type: "benefit"
-    },
-    {
-        category: "Technical",
-        name: "Engineering Software",
-        type: "benefit"
-    },
     {
         category: "Technical",
         name: "Technical Manpower",
         type: "benefit"
     },
+
     {
         category: "Technical",
-        name: "Process Optimization Capability",
+        name: "Technical Tools and Facilities",
+        type: "benefit"
+    },
+
+    {
+        category: "Technical",
+        name: "Service-Specific Capability",
         type: "benefit"
     },
 
     // ========================================
-    // OPERATIONAL - 3
+    // 2. OPERATIONAL - 3
     // ========================================
 
     {
         category: "Operational",
-        name: "Infrastructure Availability",
+        name: "Facilities and Utilities",
         type: "benefit"
     },
+
     {
         category: "Operational",
-        name: "Maintenance Systems",
+        name: "Maintenance and Quality Systems",
         type: "benefit"
     },
+
     {
         category: "Operational",
-        name: "Industrial Utilities",
+        name: "Logistics and Project Delivery",
         type: "benefit"
     },
 
     // ========================================
-    // ENVIRONMENTAL & SAFETY - 4
+    // 3. ENVIRONMENTAL & SAFETY - 3
     // ========================================
 
     {
         category: "Environmental & Safety",
-        name: "Environmental Compliance",
+        name: "Environmental Compliance and Waste Management",
         type: "benefit"
     },
+
     {
         category: "Environmental & Safety",
-        name: "Waste Management Capability",
+        name: "Process-Hazard Analysis Capability",
         type: "benefit"
     },
+
     {
         category: "Environmental & Safety",
-        name: "HAZOP/HAZID Capability",
-        type: "benefit"
-    },
-    {
-        category: "Environmental & Safety",
-        name: "Safety Management Systems",
+        name: "Safety Management System",
         type: "benefit"
     },
 
     // ========================================
-    // FINANCIAL - 4
+    // 4. FINANCIAL - 3
     // ========================================
 
     {
         category: "Financial",
-        name: "Equipment Cost",
-        type: "cost"
-    },
-    {
-        category: "Financial",
-        name: "Setup Cost",
-        type: "cost"
-    },
-    {
-        category: "Financial",
-        name: "Operating Cost",
-        type: "cost"
-    },
-    {
-        category: "Financial",
-        name: "Maintenance Cost",
+        name: "Initial Capital Requirement",
         type: "cost"
     },
 
+    {
+        category: "Financial",
+        name: "Operating and Maintenance Burden",
+        type: "cost"
+    },
+
+    {
+        category: "Financial",
+        name: "Funding/Financial Resilience",
+        type: "benefit"
+    },
+
     // ========================================
-    // REGULATORY - 6
+    // 5. REGULATORY - 3
     // ========================================
 
     {
         category: "Regulatory",
-        name: "NUPRC Compliance",
+        name: "Petroleum-Sector Registration/Compliance",
         type: "benefit"
     },
+
     {
         category: "Regulatory",
-        name: "NMDPRA Compliance",
+        name: "Laboratory Quality/Accreditation Readiness",
         type: "benefit"
     },
+
     {
         category: "Regulatory",
-        name: "NCDMB Compliance",
+        name: "Environmental Permits/Approvals",
         type: "benefit"
     },
+
+    // ========================================
+    // 6. COMMERCIAL FEASIBILITY - 3
+    // ========================================
+
     {
-        category: "Regulatory",
-        name: "NOSDRA Compliance",
+        category: "Commercial Feasibility",
+        name: "Client Demand",
         type: "benefit"
     },
+
     {
-        category: "Regulatory",
-        name: "Laboratory Certification",
+        category: "Commercial Feasibility",
+        name: "Contract Access and Business Development",
         type: "benefit"
     },
+
     {
-        category: "Regulatory",
-        name: "Environmental Permits",
+        category: "Commercial Feasibility",
+        name: "Competitive Position",
+        type: "benefit"
+    },
+
+    // ========================================
+    // 7. SCALE - 1
+    // ========================================
+
+    {
+        category: "Scale",
+        name: "Scale Suitability",
         type: "benefit"
     }
+
 ];
 
 // ========================================
-// EXCEL OUTPUT ROWS
+// OUTPUT ROWS
 // ========================================
 
 const OUTPUT_ROWS = {
+
     alternativeACi: 2,
     alternativeBCi: 3,
     alternativeCCi: 4,
@@ -198,7 +207,10 @@ const OUTPUT_ROWS = {
     operationalWeight: 21,
     environmentalWeight: 22,
     financialWeight: 23,
-    regulatoryWeight: 24
+    regulatoryWeight: 24,
+    commercialWeight: 25,
+    scaleWeight: 26
+
 };
 
 // ========================================
@@ -206,13 +218,18 @@ const OUTPUT_ROWS = {
 // ========================================
 
 function getWorkbookPath() {
+
     return process.env.EXCEL_WORKBOOK_PATH
         ? path.resolve(process.env.EXCEL_WORKBOOK_PATH)
         : DEFAULT_WORKBOOK;
+
 }
 
 function getLibreOfficePath() {
-    return process.env.LIBREOFFICE_PATH || DEFAULT_LIBREOFFICE;
+
+    return process.env.LIBREOFFICE_PATH ||
+        DEFAULT_LIBREOFFICE;
+
 }
 
 // ========================================
@@ -220,42 +237,71 @@ function getLibreOfficePath() {
 // ========================================
 
 function runCommand(command, args) {
+
     return new Promise((resolve, reject) => {
 
-        const child = spawn(command, args, {
-            windowsHide: true,
-            stdio: ["ignore", "pipe", "pipe"]
-        });
+        const child = spawn(
+            command,
+            args,
+            {
+                windowsHide: true,
+                stdio: [
+                    "ignore",
+                    "pipe",
+                    "pipe"
+                ]
+            }
+        );
 
         let stdout = "";
         let stderr = "";
 
-        child.stdout.on("data", chunk => {
-            stdout += chunk.toString();
-        });
-
-        child.stderr.on("data", chunk => {
-            stderr += chunk.toString();
-        });
-
-        child.on("error", reject);
-
-        child.on("close", code => {
-
-            if (code !== 0) {
-                reject(
-                    new Error(
-                        `LibreOffice failed with code ${code}.\n${
-                            stderr || stdout
-                        }`
-                    )
-                );
-                return;
+        child.stdout.on(
+            "data",
+            chunk => {
+                stdout += chunk.toString();
             }
+        );
 
-            resolve({ stdout, stderr });
-        });
+        child.stderr.on(
+            "data",
+            chunk => {
+                stderr += chunk.toString();
+            }
+        );
+
+        child.on(
+            "error",
+            reject
+        );
+
+        child.on(
+            "close",
+            code => {
+
+                if (code !== 0) {
+
+                    reject(
+                        new Error(
+                            `LibreOffice failed with code ${code}.\n${
+                                stderr || stdout
+                            }`
+                        )
+                    );
+
+                    return;
+                }
+
+                resolve({
+                    stdout,
+                    stderr
+                });
+
+            }
+        );
+
     });
+
 }
 
 // ========================================
@@ -275,252 +321,311 @@ function numberOrNull(value) {
     if (
         typeof value === "object" &&
         value !== null &&
-        Object.prototype.hasOwnProperty.call(value, "result")
+        Object.prototype.hasOwnProperty.call(
+            value,
+            "result"
+        )
     ) {
         value = value.result;
     }
 
     const number = Number(value);
 
-    return Number.isFinite(number) ? number : null;
+    return Number.isFinite(number)
+        ? number
+        : null;
+
 }
 
 function textOrEmpty(value) {
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
         return "";
     }
 
-    if (typeof value === "object") {
-
-        if (Object.prototype.hasOwnProperty.call(value, "result")) {
-            return textOrEmpty(value.result);
-        }
-
-        if (Object.prototype.hasOwnProperty.call(value, "text")) {
-            return textOrEmpty(value.text);
-        }
-
-        if (Object.prototype.hasOwnProperty.call(value, "value")) {
-            return textOrEmpty(value.value);
-        }
-
-        return "";
+    if (
+        typeof value === "object" &&
+        value !== null &&
+        Object.prototype.hasOwnProperty.call(
+            value,
+            "result"
+        )
+    ) {
+        return textOrEmpty(
+            value.result
+        );
     }
 
-    return String(value).trim();
+    return String(value);
+
 }
 
 // ========================================
-// VALIDATE REQUEST
+// VALIDATION
 // ========================================
 
-function validateRequest({ decisionMatrix, alternatives }) {
+function validateRequest({
+    decisionMatrix,
+    alternatives
+}) {
+
+    if (!Array.isArray(alternatives)) {
+
+        throw new Error(
+            "Alternatives must be an array."
+        );
+
+    }
+
+    if (alternatives.length !== 3) {
+
+        throw new Error(
+            "Exactly 3 alternatives are required."
+        );
+
+    }
+
+    if (
+        alternatives.some(
+            name =>
+                typeof name !== "string" ||
+                !name.trim()
+        )
+    ) {
+
+        throw new Error(
+            "All three alternatives must have names."
+        );
+
+    }
 
     if (!Array.isArray(decisionMatrix)) {
-        throw new Error("Decision matrix is required.");
+
+        throw new Error(
+            "Decision matrix must be an array."
+        );
+
     }
 
     if (decisionMatrix.length !== 3) {
-        throw new Error("Exactly 3 alternatives are required.");
+
+        throw new Error(
+            "Decision matrix must contain exactly 3 alternatives."
+        );
+
     }
 
-    decisionMatrix.forEach((row, rowIndex) => {
+    decisionMatrix.forEach(
+        (row, alternativeIndex) => {
 
-        if (
-            !Array.isArray(row) ||
-            row.length !== CRITERIA.length
-        ) {
-            throw new Error(
-                `Alternative ${rowIndex + 1} must contain exactly ${CRITERIA.length} criteria.`
-            );
-        }
+            if (!Array.isArray(row)) {
 
-        row.forEach((value, criterionIndex) => {
-
-            const number = Number(value);
-            const criterion = CRITERIA[criterionIndex];
-
-            if (!Number.isFinite(number)) {
                 throw new Error(
-                    `Invalid value for "${criterion.name}" in alternative ${rowIndex + 1}.`
+                    `Alternative ${
+                        alternativeIndex + 1
+                    } must be an array.`
                 );
+
             }
 
-            if (criterion.type === "cost") {
+            if (
+                row.length !==
+                CRITERIA.length
+            ) {
 
-                if (number <= 0) {
-                    throw new Error(
-                        `"${criterion.name}" for alternative ${rowIndex + 1} must be greater than 0.`
-                    );
-                }
+                throw new Error(
+                    `Alternative ${
+                        alternativeIndex + 1
+                    } must contain exactly ${
+                        CRITERIA.length
+                    } criteria.`
+                );
 
-            } else {
-
-                if (number < 1 || number > 10) {
-                    throw new Error(
-                        `"${criterion.name}" for alternative ${rowIndex + 1} must be between 1 and 10.`
-                    );
-                }
             }
-        });
-    });
 
-    if (
-        !Array.isArray(alternatives) ||
-        alternatives.length !== 3
-    ) {
-        throw new Error("Exactly 3 alternative names are required.");
-    }
+            row.forEach(
+                (value, criterionIndex) => {
 
-    alternatives.forEach((name, index) => {
+                    const criterion =
+                        CRITERIA[
+                            criterionIndex
+                        ];
 
-        if (
-            typeof name !== "string" ||
-            !name.trim()
-        ) {
-            throw new Error(
-                `Alternative ${index + 1} name is required.`
+                    const numericValue =
+                        Number(value);
+
+                    if (
+                        !Number.isFinite(
+                            numericValue
+                        )
+                    ) {
+
+                        throw new Error(
+                            `"${criterion.name}" in Alternative ${
+                                alternativeIndex + 1
+                            } must be a number.`
+                        );
+
+                    }
+
+                    if (
+                        numericValue < 1 ||
+                        numericValue > 9
+                    ) {
+
+                        throw new Error(
+                            `"${criterion.name}" in Alternative ${
+                                alternativeIndex + 1
+                            } must be between 1 and 9.`
+                        );
+
+                    }
+
+                    if (
+                        !Number.isInteger(
+                            numericValue
+                        )
+                    ) {
+
+                        throw new Error(
+                            `"${criterion.name}" in Alternative ${
+                                alternativeIndex + 1
+                            } must be a whole number from 1 to 9.`
+                        );
+
+                    }
+
+                }
             );
-        }
-    });
 
-    const names = alternatives.map(
-        name => name.trim().toLowerCase()
+        }
     );
 
-    if (new Set(names).size !== 3) {
-        throw new Error(
-            "Alternative names must be unique."
-        );
-    }
 }
 
 // ========================================
-// WRITE INPUTS TO EXCEL
+// WRITE INPUTS
 // ========================================
 
 async function writeInputs(
-    workbookPath,
-    tempWorkbookPath,
+    templatePath,
+    outputPath,
     decisionMatrix,
     alternatives
 ) {
 
-    const workbook = new ExcelJS.Workbook();
+    const workbook =
+        new ExcelJS.Workbook();
 
-    await workbook.xlsx.readFile(workbookPath);
+    await workbook.xlsx.load(
+        await fs.readFile(
+            templatePath
+        )
+    );
 
-    const sheet = workbook.getWorksheet(INPUT_SHEET);
+    const sheet =
+        workbook.getWorksheet(
+            INPUT_SHEET
+        );
 
     if (!sheet) {
+
         throw new Error(
             `Workbook is missing the ${INPUT_SHEET} sheet.`
         );
+
     }
 
-    // Alternative names: C1:E1
+    // Alternative names
+    sheet.getCell("C1").value =
+        alternatives[0];
 
-    sheet.getCell(1, 3).value = alternatives[0].trim();
-    sheet.getCell(1, 4).value = alternatives[1].trim();
-    sheet.getCell(1, 5).value = alternatives[2].trim();
+    sheet.getCell("D1").value =
+        alternatives[1];
 
-    // Decision matrix: C2:E23
+    sheet.getCell("E1").value =
+        alternatives[2];
 
-    for (let alternativeIndex = 0; alternativeIndex < 3; alternativeIndex++) {
+    // Decision matrix
+    decisionMatrix.forEach(
+        (row, alternativeIndex) => {
 
-        for (
-            let criterionIndex = 0;
-            criterionIndex < CRITERIA.length;
-            criterionIndex++
-        ) {
+            row.forEach(
+                (value, criterionIndex) => {
 
-            const cell = sheet.getCell(
-                criterionIndex + 2,
-                alternativeIndex + 3
+                    const rowNumber =
+                        criterionIndex + 2;
+
+                    const columnNumber =
+                        alternativeIndex + 3;
+
+                    sheet.getCell(
+                        rowNumber,
+                        columnNumber
+                    ).value =
+                        Number(value);
+
+                }
             );
 
-            cell.value = Number(
-                decisionMatrix[alternativeIndex][criterionIndex]
-            );
         }
-    }
+    );
 
-    await workbook.xlsx.writeFile(tempWorkbookPath);
+    await workbook.xlsx.writeFile(
+        outputPath
+    );
+
 }
 
 // ========================================
-// RECALCULATE WITH LIBREOFFICE
+// RECALCULATE EXCEL
 // ========================================
 
 async function recalculateWorkbook(
-    inputWorkbookPath,
+    inputWorkbook,
     outputDirectory
 ) {
 
-    await fs.mkdir(outputDirectory, {
-        recursive: true
-    });
-
-    const profileDirectory = path.join(
+    await fs.mkdir(
         outputDirectory,
-        "lo-profile"
-    );
-
-    await fs.mkdir(profileDirectory, {
-        recursive: true
-    });
-
-    const userInstallation =
-        `-env:UserInstallation=file:///${profileDirectory.replace(
-            /\\/g,
-            "/"
-        )}`;
-
-    const outputDirectoryForLibreOffice = path.join(
-        outputDirectory,
-        "recalculated"
-    );
-
-    await fs.mkdir(outputDirectoryForLibreOffice, {
-        recursive: true
-    });
-
-    const libreOfficeInput = path.join(
-        outputDirectory,
-        "ExcelCalculationInput.xlsx"
-    );
-
-    await fs.copyFile(
-        inputWorkbookPath,
-        libreOfficeInput
+        {
+            recursive: true
+        }
     );
 
     await runCommand(
         getLibreOfficePath(),
         [
             "--headless",
-            userInstallation,
             "--convert-to",
             "xlsx",
             "--outdir",
-            outputDirectoryForLibreOffice,
-            libreOfficeInput
+            outputDirectory,
+            inputWorkbook
         ]
     );
 
-    const outputWorkbookPath = path.join(
-        outputDirectoryForLibreOffice,
-        "ExcelCalculationInput.xlsx"
+    const outputPath =
+        path.join(
+            outputDirectory,
+            path.basename(
+                inputWorkbook
+            )
+        );
+
+    await fs.access(
+        outputPath
     );
 
-    await fs.access(outputWorkbookPath);
+    return outputPath;
 
-    return outputWorkbookPath;
 }
 
 // ========================================
-// READ EXCEL OUTPUT
+// READ OUTPUTS
 // ========================================
 
 async function readOutputs(
@@ -528,95 +633,149 @@ async function readOutputs(
     alternatives
 ) {
 
-    const workbook = new ExcelJS.Workbook();
+    const workbook =
+        new ExcelJS.Workbook();
 
     await workbook.xlsx.load(
-        await fs.readFile(recalculatedWorkbookPath)
+        await fs.readFile(
+            recalculatedWorkbookPath
+        )
     );
 
-    const sheet = workbook.getWorksheet(OUTPUT_SHEET);
+    const sheet =
+        workbook.getWorksheet(
+            OUTPUT_SHEET
+        );
 
     if (!sheet) {
+
         throw new Error(
             `Workbook is missing the ${OUTPUT_SHEET} sheet.`
         );
+
     }
 
     const value = row =>
-        sheet.getCell(row, 2).value;
+        sheet.getCell(
+            row,
+            2
+        ).value;
+
+    // ========================================
+    // RANKING
+    // ========================================
 
     const ranking = [
 
         {
-            alternative: alternatives[0],
+            alternative:
+                alternatives[0],
 
-            excelAlternative: textOrEmpty(
-                value(OUTPUT_ROWS.alternativeARank)
-            ),
+            rank:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeARank
+                    )
+                ),
 
-            rank: numberOrNull(
-                value(OUTPUT_ROWS.alternativeARank)
-            ),
+            closenessCoefficient:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeACi
+                    )
+                ),
 
-            closenessCoefficient: numberOrNull(
-                value(OUTPUT_ROWS.alternativeACi)
-            ),
+            positiveDistance:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeASPlus
+                    )
+                ),
 
-            positiveDistance: numberOrNull(
-                value(OUTPUT_ROWS.alternativeASPlus)
-            ),
-
-            negativeDistance: numberOrNull(
-                value(OUTPUT_ROWS.alternativeASMinus)
-            )
+            negativeDistance:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeASMinus
+                    )
+                )
         },
 
         {
-            alternative: alternatives[1],
+            alternative:
+                alternatives[1],
 
-            excelAlternative: textOrEmpty(
-                value(OUTPUT_ROWS.alternativeBRank)
-            ),
+            rank:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeBRank
+                    )
+                ),
 
-            rank: numberOrNull(
-                value(OUTPUT_ROWS.alternativeBRank)
-            ),
+            closenessCoefficient:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeBCi
+                    )
+                ),
 
-            closenessCoefficient: numberOrNull(
-                value(OUTPUT_ROWS.alternativeBCi)
-            ),
+            positiveDistance:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeBSPlus
+                    )
+                ),
 
-            positiveDistance: numberOrNull(
-                value(OUTPUT_ROWS.alternativeBSPlus)
-            ),
-
-            negativeDistance: numberOrNull(
-                value(OUTPUT_ROWS.alternativeBSMinus)
-            )
+            negativeDistance:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeBSMinus
+                    )
+                )
         },
 
         {
-            alternative: alternatives[2],
+            alternative:
+                alternatives[2],
 
-            excelAlternative: textOrEmpty(
-                value(OUTPUT_ROWS.alternativeCRank)
-            ),
+            rank:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeCRank
+                    )
+                ),
 
-            rank: numberOrNull(
-                value(OUTPUT_ROWS.alternativeCRank)
-            ),
+            closenessCoefficient:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeCCi
+                    )
+                ),
 
-            closenessCoefficient: numberOrNull(
-                value(OUTPUT_ROWS.alternativeCCi)
-            ),
+            positiveDistance:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeCSPlus
+                    )
+                ),
 
-            positiveDistance: numberOrNull(
-                value(OUTPUT_ROWS.alternativeCSPlus)
-            ),
-
-            negativeDistance: numberOrNull(
-                value(OUTPUT_ROWS.alternativeCSMinus)
-            )
+            negativeDistance:
+                numberOrNull(
+                    value(
+                        OUTPUT_ROWS
+                            .alternativeCSMinus
+                    )
+                )
         }
 
     ];
@@ -627,49 +786,108 @@ async function readOutputs(
             (b.rank ?? 999)
     );
 
-    const consistencyStatus = textOrEmpty(
-        value(OUTPUT_ROWS.consistencyStatus)
-    );
+    // ========================================
+    // AHP WEIGHTS
+    // ========================================
+
+    const weightNames = [
+        "Technical",
+        "Operational",
+        "Environmental & Safety",
+        "Financial",
+        "Regulatory",
+        "Commercial Feasibility",
+        "Scale"
+    ];
+
+    const weightRows = [
+        OUTPUT_ROWS.technicalWeight,
+        OUTPUT_ROWS.operationalWeight,
+        OUTPUT_ROWS.environmentalWeight,
+        OUTPUT_ROWS.financialWeight,
+        OUTPUT_ROWS.regulatoryWeight,
+        OUTPUT_ROWS.commercialWeight,
+        OUTPUT_ROWS.scaleWeight
+    ];
+
+    const weights =
+        weightRows.map(
+            row =>
+                numberOrNull(
+                    value(row)
+                )
+        );
+
+    const weightDetails =
+        weightNames.map(
+            (name, index) => ({
+                criterion: name,
+                weight: weights[index]
+            })
+        );
+
+    // ========================================
+    // CONSISTENCY
+    // ========================================
+
+    const consistencyStatus =
+        textOrEmpty(
+            value(
+                OUTPUT_ROWS
+                    .consistencyStatus
+            )
+        );
+
+    const consistencyRatio =
+        numberOrNull(
+            value(
+                OUTPUT_ROWS
+                    .consistencyRatio
+            )
+        );
+
+    // ========================================
+    // RETURN
+    // ========================================
 
     return {
 
-        source: "Excel AHP-TOPSIS workbook",
+        source:
+            "Excel AHP-TOPSIS workbook",
+
+        model: {
+            majorCriteria: 7,
+            subCriteria: 19,
+            ratingScale: "1-9",
+
+            criteria:
+                CRITERIA.map(
+                    criterion => ({
+                        category:
+                            criterion.category,
+                        name:
+                            criterion.name,
+                        type:
+                            criterion.type
+                    })
+                )
+        },
 
         ahp: {
 
-            weights: [
+            weights,
 
-                numberOrNull(
-                    value(OUTPUT_ROWS.technicalWeight)
-                ),
+            weightDetails,
 
-                numberOrNull(
-                    value(OUTPUT_ROWS.operationalWeight)
-                ),
-
-                numberOrNull(
-                    value(OUTPUT_ROWS.environmentalWeight)
-                ),
-
-                numberOrNull(
-                    value(OUTPUT_ROWS.financialWeight)
-                ),
-
-                numberOrNull(
-                    value(OUTPUT_ROWS.regulatoryWeight)
-                )
-
-            ],
-
-            consistencyRatio: numberOrNull(
-                value(OUTPUT_ROWS.consistencyRatio)
-            ),
+            consistencyRatio,
 
             consistencyStatus,
 
             consistent:
-                consistencyStatus.toLowerCase() ===
+                consistencyStatus
+                    .toLowerCase() ===
                 "consistent"
+
         },
 
         topsis: {
@@ -680,27 +898,34 @@ async function readOutputs(
                 ranking[0]
                     ? {
                         alternative:
-                            ranking[0].alternative,
+                            ranking[0]
+                                .alternative,
 
                         rank:
                             ranking[0].rank,
 
                         closenessCoefficient:
-                            ranking[0].closenessCoefficient,
+                            ranking[0]
+                                .closenessCoefficient,
 
                         positiveDistance:
-                            ranking[0].positiveDistance,
+                            ranking[0]
+                                .positiveDistance,
 
                         negativeDistance:
-                            ranking[0].negativeDistance
+                            ranking[0]
+                                .negativeDistance
                     }
                     : null
+
         }
+
     };
+
 }
 
 // ========================================
-// RUN EXCEL DSS
+// RUN DSS
 // ========================================
 
 async function runExcelDSS({
@@ -713,25 +938,33 @@ async function runExcelDSS({
         alternatives
     });
 
-    const templatePath = getWorkbookPath();
+    const templatePath =
+        getWorkbookPath();
 
-    await fs.access(templatePath);
-
-    const tempDirectory = path.join(
-        os.tmpdir(),
-        `engineer-ai-dss-${crypto.randomUUID()}`
+    await fs.access(
+        templatePath
     );
 
-    await fs.mkdir(tempDirectory, {
-        recursive: true
-    });
+    const tempDirectory =
+        path.join(
+            os.tmpdir(),
+            `engineer-ai-dss-${crypto.randomUUID()}`
+        );
+
+    await fs.mkdir(
+        tempDirectory,
+        {
+            recursive: true
+        }
+    );
 
     try {
 
-        const inputWorkbookPath = path.join(
-            tempDirectory,
-            "EngineerAI_Input.xlsx"
-        );
+        const inputWorkbookPath =
+            path.join(
+                tempDirectory,
+                "EngineerAI_Input.xlsx"
+            );
 
         await writeInputs(
             templatePath,
@@ -743,7 +976,10 @@ async function runExcelDSS({
         const recalculatedWorkbookPath =
             await recalculateWorkbook(
                 inputWorkbookPath,
-                tempDirectory
+                path.join(
+                    tempDirectory,
+                    "recalculated"
+                )
             );
 
         return await readOutputs(
@@ -751,13 +987,19 @@ async function runExcelDSS({
             alternatives
         );
 
-    } finally {
-
-        await fs.rm(tempDirectory, {
-            recursive: true,
-            force: true
-        });
     }
+    finally {
+
+        await fs.rm(
+            tempDirectory,
+            {
+                recursive: true,
+                force: true
+            }
+        );
+
+    }
+
 }
 
 // ========================================
