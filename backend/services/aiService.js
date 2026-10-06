@@ -20,8 +20,6 @@ const MODEL_PREFERENCE = [
 
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
 
-const ATTEMPTS_PER_MODEL = 3;
-
 const BUSY_MESSAGE =
     "The AI assistant is busy right now. Please try again in a moment.";
 
@@ -111,23 +109,79 @@ function toFriendlyError(error) {
 
 // ========================================
 // GENERATE WITH RETRY + MODEL FALLBACK
+//
+// Attempts are spread across rounds so a
+// single busy model never blocks the others,
+// and the whole search is capped so the
+// frontend timeout is never hit.
 // ========================================
 
+const ROUND_DELAYS_MS = [0, 1000, 3000];
+
+const REQUEST_BUDGET_MS = 45000;
+
+
+function rotateModels() {
+
+    const offset =
+        Date.now() % MODEL_PREFERENCE.length;
+
+    return MODEL_PREFERENCE
+        .slice(offset)
+        .concat(MODEL_PREFERENCE.slice(0, offset));
+
+}
+
+
 async function generateWithFallback(systemPrompt) {
+
+    const startedAt = Date.now();
+
+    const models = rotateModels();
+
+    const dropped = new Set();
 
     let lastError = null;
 
     let quotaBlockedModels = 0;
 
-    for (const model of MODEL_PREFERENCE) {
+    for (
+        let round = 0;
+        round < ROUND_DELAYS_MS.length;
+        round++
+    ) {
 
-        let blockedByQuota = false;
+        if (ROUND_DELAYS_MS[round] > 0) {
 
-        for (
-            let attempt = 1;
-            attempt <= ATTEMPTS_PER_MODEL;
-            attempt++
+            await sleep(ROUND_DELAYS_MS[round]);
+
+        }
+
+        if (
+            Date.now() - startedAt >
+            REQUEST_BUDGET_MS
         ) {
+
+            break;
+
+        }
+
+        for (const model of models) {
+
+            if (dropped.has(model)) {
+
+                continue;
+
+            }
+
+            if (
+                Date.now() - startedAt >
+                REQUEST_BUDGET_MS
+            ) {
+
+                break;
+
+            }
 
             try {
 
@@ -162,21 +216,25 @@ async function generateWithFallback(systemPrompt) {
                 lastError = error;
 
                 console.error(
-                    `AI Service Error (model=${model}, attempt=${attempt}/${ATTEMPTS_PER_MODEL}):`,
+                    `AI Service Error (model=${model}, round=${round + 1}):`,
                     error && error.message
                 );
 
                 if (isModelMissing(error)) {
 
-                    break;
+                    dropped.add(model);
+
+                    continue;
 
                 }
 
                 if (isLongQuotaError(error)) {
 
-                    blockedByQuota = true;
+                    dropped.add(model);
 
-                    break;
+                    quotaBlockedModels++;
+
+                    continue;
 
                 }
 
@@ -186,19 +244,16 @@ async function generateWithFallback(systemPrompt) {
 
                 }
 
-                if (attempt < ATTEMPTS_PER_MODEL) {
-
-                    await sleep(attempt * 1000);
-
-                }
-
             }
 
         }
 
-        if (blockedByQuota) {
+        if (
+            dropped.size ===
+            models.length
+        ) {
 
-            quotaBlockedModels++;
+            break;
 
         }
 
@@ -207,7 +262,8 @@ async function generateWithFallback(systemPrompt) {
     if (
         lastError &&
         isLongQuotaError(lastError) &&
-        quotaBlockedModels === MODEL_PREFERENCE.length
+        quotaBlockedModels ===
+            MODEL_PREFERENCE.length
     ) {
 
         const quotaError = new Error(
