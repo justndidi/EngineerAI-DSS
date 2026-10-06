@@ -165,7 +165,14 @@ function displayAHP(result) {
   // CONSISTENCY RATIO
   // ========================================
 
-  const ratio = Number(ahp.consistencyRatio);
+  const rawRatio = ahp.consistencyRatio;
+
+  const ratio =
+    rawRatio === null ||
+    rawRatio === undefined ||
+    rawRatio === ""
+      ? NaN
+      : Number(rawRatio);
 
   consistencyRatio.textContent = Number.isFinite(ratio)
     ? Math.abs(ratio).toFixed(4)

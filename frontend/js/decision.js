@@ -225,8 +225,6 @@ function generateCriteriaTable() {
 
             const inputAttributes = `
                 type="number"
-                min="1"
-                max="9"
                 step="any"
                 class="score-input"
                 required
@@ -516,18 +514,13 @@ function getDecisionMatrix() {
 
             }
 
-            if (
-                value < 1 ||
-                value > 9
-            ) {
+            if (value < 0) {
 
                 throw new Error(
-                    `"${criterion.name}" must be rated from 1 to 9.`
+                    `"${criterion.name}" cannot be negative.`
                 );
 
             }
-
-            
 
             decisionMatrix[
                 alternativeIndex

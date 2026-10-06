@@ -496,20 +496,15 @@ function validateRequest({
 
                     }
 
-                    if (
-                        numericValue < 1 ||
-                        numericValue > 9
-                    ) {
+                    if (numericValue < 0) {
 
                         throw new Error(
                             `"${criterion.name}" in Alternative ${
                                 alternativeIndex + 1
-                            } must be between 1 and 9.`
+                            } cannot be negative.`
                         );
 
                     }
-
-                   
 
                 }
             );
