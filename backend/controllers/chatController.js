@@ -123,7 +123,9 @@ async function chat(req, res) {
             success: false,
 
             error:
-                "Unable to process your request."
+                error && error.friendly
+                    ? error.message
+                    : "Unable to process your request."
 
         });
 

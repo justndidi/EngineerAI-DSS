@@ -484,19 +484,7 @@ function validateRequest({
 
                     }
 
-                    if (
-                        !Number.isInteger(
-                            numericValue
-                        )
-                    ) {
-
-                        throw new Error(
-                            `"${criterion.name}" in Alternative ${
-                                alternativeIndex + 1
-                            } must be a whole number from 1 to 9.`
-                        );
-
-                    }
+                   
 
                 }
             );

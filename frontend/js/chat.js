@@ -185,6 +185,10 @@ chatForm.addEventListener("submit", async function (event) {
     // SEND REQUEST TO EXPRESS
     // ========================================
 
+    const controller = new AbortController();
+
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
+
     const response = await fetch(apiURL, {
       method: "POST",
 
@@ -197,7 +201,11 @@ chatForm.addEventListener("submit", async function (event) {
 
         dssResult,
       }),
+
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     // ========================================
     // READ RAW RESPONSE
@@ -268,7 +276,9 @@ chatForm.addEventListener("submit", async function (event) {
     hideTyping();
 
     addMessage(
-      error.message || "Unable to communicate with the backend.",
+      error.name === "AbortError"
+        ? "The AI assistant took too long to respond. Please try again."
+        : error.message || "Unable to communicate with the backend.",
 
       "bot",
     );

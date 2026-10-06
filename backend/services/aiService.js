@@ -9,6 +9,224 @@ const ai = new GoogleGenAI({
 // ENGINEERING DSS AI SERVICE
 // ========================================
 
+const MODEL_PREFERENCE = [
+
+    "gemini-3.6-flash",
+    "gemini-3.8-flash",
+    "gemini-flash-latest",
+    "gemini-3.5-flash"
+
+];
+
+const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
+
+const ATTEMPTS_PER_MODEL = 3;
+
+const BUSY_MESSAGE =
+    "The AI assistant is busy right now. Please try again in a moment.";
+
+
+function sleep(ms) {
+
+    return new Promise(resolve => setTimeout(resolve, ms));
+
+}
+
+
+function getStatus(error) {
+
+    return Number(
+        error &&
+        (error.status || error.code)
+    );
+
+}
+
+
+function isRetryable(error) {
+
+    return RETRYABLE_STATUS.has(
+        getStatus(error)
+    );
+
+}
+
+
+function isModelMissing(error) {
+
+    const status = getStatus(error);
+
+    const text = String(
+        (error && error.message) || ""
+    ).toLowerCase();
+
+    return (
+        status === 404 ||
+        text.includes("model not found") ||
+        text.includes("is not found") ||
+        text.includes("not found for api version")
+    );
+
+}
+
+
+// Long quota resets (hours/days) cannot be
+// fixed by retrying, so move to the next model.
+
+function isLongQuotaError(error) {
+
+    if (getStatus(error) !== 429) {
+        return false;
+    }
+
+    const text = String(
+        (error && error.message) || ""
+    );
+
+    return /retry in \d+(h|d)/i.test(text);
+
+}
+
+
+function toFriendlyError(error) {
+
+    const status = getStatus(error);
+
+    const message =
+        !status ||
+        isRetryable(error)
+            ? BUSY_MESSAGE
+            : "The AI assistant could not respond to this request. Please try again later.";
+
+    const friendly = new Error(message);
+
+    friendly.friendly = true;
+
+    friendly.cause = error;
+
+    return friendly;
+
+}
+
+
+// ========================================
+// GENERATE WITH RETRY + MODEL FALLBACK
+// ========================================
+
+async function generateWithFallback(systemPrompt) {
+
+    let lastError = null;
+
+    let quotaBlockedModels = 0;
+
+    for (const model of MODEL_PREFERENCE) {
+
+        let blockedByQuota = false;
+
+        for (
+            let attempt = 1;
+            attempt <= ATTEMPTS_PER_MODEL;
+            attempt++
+        ) {
+
+            try {
+
+                const response =
+                    await ai.models.generateContent({
+
+                        model,
+
+                        contents: systemPrompt
+
+                    });
+
+                const text = response.text;
+
+                if (!text) {
+
+                    const emptyError =
+                        new Error(
+                            "Model returned an empty response."
+                        );
+
+                    emptyError.status = 503;
+
+                    throw emptyError;
+
+                }
+
+                return text;
+
+            } catch (error) {
+
+                lastError = error;
+
+                console.error(
+                    `AI Service Error (model=${model}, attempt=${attempt}/${ATTEMPTS_PER_MODEL}):`,
+                    error && error.message
+                );
+
+                if (isModelMissing(error)) {
+
+                    break;
+
+                }
+
+                if (isLongQuotaError(error)) {
+
+                    blockedByQuota = true;
+
+                    break;
+
+                }
+
+                if (!isRetryable(error)) {
+
+                    throw error;
+
+                }
+
+                if (attempt < ATTEMPTS_PER_MODEL) {
+
+                    await sleep(attempt * 1000);
+
+                }
+
+            }
+
+        }
+
+        if (blockedByQuota) {
+
+            quotaBlockedModels++;
+
+        }
+
+    }
+
+    if (
+        lastError &&
+        isLongQuotaError(lastError) &&
+        quotaBlockedModels === MODEL_PREFERENCE.length
+    ) {
+
+        const quotaError = new Error(
+            "The AI assistant has reached its usage limit for now. Please try again later."
+        );
+
+        quotaError.friendly = true;
+
+        quotaError.cause = lastError;
+
+        throw quotaError;
+
+    }
+
+    throw lastError || new Error(BUSY_MESSAGE);
+
+}
+
+
 async function askAI(message, context = {}) {
 
     const dss = context.dss || null;
@@ -266,26 +484,31 @@ ${message}
 
     try {
 
-        const response =
-            await ai.models.generateContent({
-
-                model: "gemini-3.6-flash",
-
-                contents: systemPrompt
-
-            });
-
-
-        return response.text;
+        return await generateWithFallback(
+            systemPrompt
+        );
 
     } catch (error) {
+
+        if (error && error.friendly) {
+
+            console.error(
+                "AI Service Error:",
+                error.message,
+                "|",
+                error.cause && error.cause.message
+            );
+
+            throw error;
+
+        }
 
         console.error(
             "AI Service Error:",
             error
         );
 
-        throw error;
+        throw toFriendlyError(error);
 
     }
 

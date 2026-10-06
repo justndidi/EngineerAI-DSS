@@ -5,7 +5,7 @@
 // ========================================
 
 const API_BASE_URL =
-    "http://localhost:5000";
+    "https://engineerai-dss.onrender.com";
 
 // ========================================
 // DOM ELEMENTS
@@ -227,7 +227,7 @@ function generateCriteriaTable() {
                 type="number"
                 min="1"
                 max="9"
-                step="1"
+                step="any"
                 class="score-input"
                 required
             `;
@@ -527,15 +527,7 @@ function getDecisionMatrix() {
 
             }
 
-            if (
-                !Number.isInteger(value)
-            ) {
-
-                throw new Error(
-                    `"${criterion.name}" must be a whole number from 1 to 9.`
-                );
-
-            }
+            
 
             decisionMatrix[
                 alternativeIndex
@@ -661,13 +653,11 @@ async function runAnalysis() {
                             "application/json"
                     },
 
-                    body:
-                        JSON.stringify({
-                            decisionMatrix,
-                            alternatives:
-                                currentAlternatives,
-                            criteriaTypes
-                        })
+                    body: JSON.stringify({
+    decisionMatrix,
+    alternatives: currentAlternatives,
+    criteriaTypes
+})
                 }
             );
 
