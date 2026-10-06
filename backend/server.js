@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const crypto = require("crypto");
+
 const express = require("express");
 const cors = require("cors");
 
@@ -81,6 +83,14 @@ app.get(
         const trimmed =
             key ? key.trim() : "";
 
+        const fingerprint = trimmed
+            ? crypto
+                .createHash("sha256")
+                .update(trimmed)
+                .digest("hex")
+                .slice(0, 12)
+            : null;
+
         res.json({
 
             success: true,
@@ -93,7 +103,9 @@ app.get(
                 Boolean(trimmed) &&
                 trimmed === key &&
                 trimmed.length >= 30 &&
-                !trimmed.includes(" ")
+                !trimmed.includes(" "),
+
+            keyFingerprint: fingerprint
 
         });
 
