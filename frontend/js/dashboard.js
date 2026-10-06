@@ -3,6 +3,12 @@
 // ========================================
 
 // ========================================
+// API BASE URL
+// ========================================
+
+const API_BASE_URL = "https://engineerai-dss.onrender.com";
+
+// ========================================
 // GET ELEMENTS
 // ========================================
 
@@ -82,7 +88,26 @@ async function runDSS() {
 
     runDSSBtn.disabled = true;
 
-    const response = await fetch("http://localhost:5000/api/dss/run", {
+    const decisionMatrix = JSON.parse(
+      sessionStorage.getItem("decisionMatrix") || "[]"
+    );
+
+    const alternatives = JSON.parse(
+      sessionStorage.getItem("alternatives") || "[]"
+    );
+
+    if (
+      !Array.isArray(decisionMatrix) ||
+      decisionMatrix.length === 0 ||
+      !Array.isArray(alternatives) ||
+      alternatives.length === 0
+    ) {
+      throw new Error(
+        "No stored ratings found. Run a decision analysis first."
+      );
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/dss/run`, {
       method: "POST",
 
       headers: {
@@ -90,13 +115,9 @@ async function runDSS() {
       },
 
       body: JSON.stringify({
-        decisionMatrix: JSON.parse(
-          sessionStorage.getItem("decisionMatrix") || "[]"
-        ),
+        decisionMatrix,
 
-        alternatives: JSON.parse(
-          sessionStorage.getItem("alternatives") || "[]"
-        ),
+        alternatives,
       }),
     });
 

@@ -2,6 +2,10 @@ const {
     runExcelDSS
 } = require("../services/excelService");
 
+const {
+    setLatestDSSResult
+} = require("../services/dssStateService");
+
 
 // ========================================
 // RUN DSS
@@ -69,6 +73,13 @@ async function runDSS(req, res) {
                 alternatives
 
             });
+
+
+        // ========================================
+        // STORE LATEST RESULT FOR CHAT CONTEXT
+        // ========================================
+
+        setLatestDSSResult(result);
 
 
         // ========================================

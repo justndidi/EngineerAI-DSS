@@ -320,6 +320,24 @@ clearChatBtn.addEventListener("click", function () {
 });
 
 // ========================================
+// QUICK QUESTIONS
+// ========================================
+
+document.querySelectorAll(".quick-question").forEach((button) => {
+  button.addEventListener("click", function () {
+    const question = button.dataset.question;
+
+    if (!question || messageInput.disabled) {
+      return;
+    }
+
+    messageInput.value = question;
+
+    chatForm.requestSubmit();
+  });
+});
+
+// ========================================
 // ENTER KEY
 // ========================================
 

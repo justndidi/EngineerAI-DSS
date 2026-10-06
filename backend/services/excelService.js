@@ -1,4 +1,5 @@
 const fs = require("fs/promises");
+const fsSync = require("fs");
 const path = require("path");
 const os = require("os");
 const crypto = require("crypto");
@@ -219,9 +220,33 @@ const OUTPUT_ROWS = {
 
 function getWorkbookPath() {
 
-    return process.env.EXCEL_WORKBOOK_PATH
-        ? path.resolve(process.env.EXCEL_WORKBOOK_PATH)
-        : DEFAULT_WORKBOOK;
+    const configured =
+        process.env.EXCEL_WORKBOOK_PATH
+            ? path.resolve(
+                process.env.EXCEL_WORKBOOK_PATH
+            )
+            : DEFAULT_WORKBOOK;
+
+    if (fsSync.existsSync(configured)) {
+
+        return configured;
+
+    }
+
+    if (
+        configured !== DEFAULT_WORKBOOK &&
+        fsSync.existsSync(DEFAULT_WORKBOOK)
+    ) {
+
+        console.warn(
+            `Workbook not found at "${configured}". Falling back to "${DEFAULT_WORKBOOK}".`
+        );
+
+        return DEFAULT_WORKBOOK;
+
+    }
+
+    return configured;
 
 }
 

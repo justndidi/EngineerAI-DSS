@@ -642,6 +642,15 @@ async function runAnalysis() {
             decisionMatrix
         );
 
+        const controller =
+            new AbortController();
+
+        const timeoutId =
+            setTimeout(
+                () => controller.abort(),
+                60000
+            );
+
         const response =
             await fetch(
                 `${API_BASE_URL}/api/dss/run`,
@@ -657,9 +666,13 @@ async function runAnalysis() {
     decisionMatrix,
     alternatives: currentAlternatives,
     criteriaTypes
-})
+}),
+
+                    signal: controller.signal
                 }
             );
+
+        clearTimeout(timeoutId);
 
         let data;
 
@@ -709,6 +722,20 @@ async function runAnalysis() {
             )
         );
 
+        sessionStorage.setItem(
+            "decisionMatrix",
+            JSON.stringify(
+                decisionMatrix
+            )
+        );
+
+        sessionStorage.setItem(
+            "alternatives",
+            JSON.stringify(
+                currentAlternatives
+            )
+        );
+
         statusMessage.textContent =
             "Analysis completed successfully. Redirecting...";
 
@@ -724,8 +751,10 @@ async function runAnalysis() {
         );
 
         statusMessage.textContent =
-            error.message ||
-            "Unable to run DSS analysis.";
+            error.name === "AbortError"
+                ? "The analysis took too long to complete. Please try again."
+                : error.message ||
+                    "Unable to run DSS analysis.";
 
         runAnalysisBtn.disabled =
             false;
@@ -749,6 +778,18 @@ function resetAnalysis() {
         input => {
             input.value = "";
         }
+    );
+
+    sessionStorage.removeItem(
+        "dssResult"
+    );
+
+    sessionStorage.removeItem(
+        "decisionMatrix"
+    );
+
+    sessionStorage.removeItem(
+        "alternatives"
     );
 
     statusMessage.textContent =
