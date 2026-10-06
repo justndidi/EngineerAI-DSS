@@ -118,6 +118,24 @@ async function chat(req, res) {
         );
 
 
+        const cause =
+            (error && error.cause) || error;
+
+        const detail =
+            String(
+                (cause && cause.message) || ""
+            )
+                .replace(
+                    /AIza[0-9A-Za-z_\-]{10,}/g,
+                    "[REDACTED]"
+                )
+                .replace(
+                    /([?&]key=)[^&\s"]+/gi,
+                    "$1[REDACTED]"
+                )
+                .slice(0, 300);
+
+
         return res.status(500).json({
 
             success: false,
@@ -125,7 +143,9 @@ async function chat(req, res) {
             error:
                 error && error.friendly
                     ? error.message
-                    : "Unable to process your request."
+                    : "Unable to process your request.",
+
+            detail
 
         });
 

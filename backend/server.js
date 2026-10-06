@@ -67,6 +67,41 @@ app.get(
 
 
 // ========================================
+// MASKED AI CONFIG HEALTH CHECK
+// (never exposes the key itself)
+// ========================================
+
+app.get(
+    "/api/health/ai",
+    (req, res) => {
+
+        const key =
+            process.env.GEMINI_API_KEY;
+
+        const trimmed =
+            key ? key.trim() : "";
+
+        res.json({
+
+            success: true,
+
+            hasGeminiKey: Boolean(trimmed),
+
+            keyLength: trimmed.length,
+
+            keyLooksValid:
+                Boolean(trimmed) &&
+                trimmed === key &&
+                trimmed.length >= 30 &&
+                !trimmed.includes(" ")
+
+        });
+
+    }
+);
+
+
+// ========================================
 // API ROUTES
 // ========================================
 

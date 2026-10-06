@@ -251,7 +251,8 @@ chatForm.addEventListener("submit", async function (event) {
 
     if (!response.ok) {
       throw new Error(
-        data.error || data.message || `Server error: ${response.status}`,
+        (data.error || data.message || `Server error: ${response.status}`) +
+          (data.detail ? ` - ${data.detail}` : ""),
       );
     }
 
@@ -263,9 +264,10 @@ chatForm.addEventListener("submit", async function (event) {
       addMessage(data.reply, "bot");
     } else {
       addMessage(
-        data.error ||
+        (data.error ||
           data.message ||
-          "The server did not return an AI response.",
+          "The server did not return an AI response.") +
+          (data.detail ? ` - ${data.detail}` : ""),
 
         "bot",
       );
